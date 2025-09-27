@@ -9,7 +9,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { usePathname } from "next/navigation";
 import NavIcons from "./NavIcons";
-import Search from "../Search";
+import Search from "./Search";
 import { useState } from "react";
 import { MenuIcon, X } from "lucide-react";
 
@@ -44,8 +44,8 @@ function Navigation() {
         <li>
           <Link
             href="/"
-            className={`hover:text-brand-400 transition-colors ${
-              pathname === "/" ? "text-brand-400" : ""
+            className={`hover:text-brand-500 transition-colors ${
+              pathname === "/" ? "text-brand-500" : ""
             }`}
           >
             Home
@@ -55,8 +55,8 @@ function Navigation() {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
-                className={`hover:text-brand-400 ${
-                  pathname.includes("/products") ? "text-brand-400" : ""
+                className={`hover:text-brand-500 ${
+                  pathname.includes("/products") ? "text-brand-500" : ""
                 }`}
                 variant="ghost"
               >
@@ -75,8 +75,8 @@ function Navigation() {
         <li>
           <Link
             href="/contact"
-            className={`hover:text-brand-400 transition-colors ${
-              pathname.includes("/contact") ? "text-brand-400" : ""
+            className={`hover:text-brand-500 transition-colors ${
+              pathname.includes("/contact") ? "text-brand-500" : ""
             }`}
           >
             Contact
@@ -114,8 +114,8 @@ function Navigation() {
                 <Link
                   href="/"
                   onClick={closeMenu}
-                  className={`block py-2 text-lg hover:text-brand-400 transition-colors ${
-                    pathname === "/" ? "text-brand-400" : ""
+                  className={`block py-2 text-lg hover:text-brand-500 transition-colors ${
+                    pathname === "/" ? "text-brand-500" : ""
                   }`}
                 >
                   Home
@@ -126,7 +126,7 @@ function Navigation() {
                 <div className="py-2">
                   <span
                     className={`text-lg ${
-                      pathname.includes("/products") ? "text-brand-400" : ""
+                      pathname.includes("/products") ? "text-brand-500" : ""
                     }`}
                   >
                     Products
@@ -137,7 +137,7 @@ function Navigation() {
                         <Link
                           href={`/products/${cat.slug}`}
                           onClick={closeMenu}
-                          className="block py-1 text-gray-600 dark:text-gray-300 hover:text-brand-400 transition-colors"
+                          className="block py-1 text-gray-600 dark:text-gray-300 hover:text-brand-500 transition-colors"
                         >
                           {cat.name}
                         </Link>
@@ -151,8 +151,8 @@ function Navigation() {
                 <Link
                   href="/contact"
                   onClick={closeMenu}
-                  className={`block py-2 text-lg hover:text-brand-400 transition-colors ${
-                    pathname.includes("/contact") ? "text-brand-400" : ""
+                  className={`block py-2 text-lg hover:text-brand-500 transition-colors ${
+                    pathname.includes("/contact") ? "text-brand-500" : ""
                   }`}
                 >
                   Contact

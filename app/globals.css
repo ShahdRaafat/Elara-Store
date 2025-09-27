@@ -11,7 +11,8 @@
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.4903 0.1451 358.067);
+  --primary: oklch(40.91% 0.172 27.54);
+
   --primary-foreground: oklch(0.985 0 0);
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
@@ -94,17 +95,16 @@
 } */
 
 @theme inline {
-  --color-brand-50: #f9e8ef;
-  --color-brand-100: #f3d1df;
-  --color-brand-200: #e6a3bf;
-  --color-brand-300: #da749f;
-  --color-brand-400: #cd467f;
-  --color-brand-500: #8f2d56; /* Base Brand Color */
-  --color-brand-600: #732446;
-  --color-brand-700: #571b35;
-  --color-brand-800: #3b1223;
-  --color-brand-900: #200812;
-
+  --color-brand-50: #fde8ea;
+  --color-brand-100: #fbd0d3;
+  --color-brand-200: #f6a9ad;
+  --color-brand-300: #f18286;
+  --color-brand-400: #e65c61;
+  --color-brand-500: #8c1c13;
+  --color-brand-600: #73170f;
+  --color-brand-700: #5a120c;
+  --color-brand-800: #420d09;
+  --color-brand-900: #2a0806;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -176,3 +176,28 @@ body {
     @apply bg-background text-foreground;
   }
 }
+/* Swiper Custiomization */
+.swiper-pagination-bullet {
+  background-color: #8c1c13 !important;
+  opacity: 0.5 !important;
+}
+.swiper-pagination-bullet-active {
+  background-color: #8c1c13 !important;
+  opacity: 1 !important;
+}
+.swiper-button-next,
+.swiper-button-prev {
+  color: #8c1c13 !important;
+}
+
+/* --color-brand-50: #f9e8ef;
+  --color-brand-100: #f3d1df;
+  --color-brand-200: #e6a3bf;
+  --color-brand-300: #da749f;
+  --color-brand-400: #cd467f;
+  --color-brand-500: #8f2d56; 
+
+  --color-brand-600: #732446;
+  --color-brand-700: #571b35;
+  --color-brand-800: #3b1223;
+  --color-brand-900: #200812; */

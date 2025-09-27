@@ -23,12 +23,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={` text-grey-700 min-h-screen flex flex-col ${montserrat.className} antialiased`}
+        className={` text-grey-700 min-h-screen flex flex-col ${montserrat.className} overflow-x-hidden antialiased`}
       >
         <Header />
 
         <div className="flex-1 px-4 sm:px-6 md:px-8  pb-8 lg:py-12 grid">
-          <main className="max-w-[1400px] mx-auto w-full">{children}</main>
+          <main className="max-w-[1350px] mx-auto w-full">{children}</main>
         </div>
       </body>
     </html>
