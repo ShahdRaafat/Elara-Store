@@ -1,17 +1,18 @@
 "use client";
-import Link from "next/link";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
-import { usePathname } from "next/navigation";
-import NavIcons from "./NavIcons";
-import Search from "./Search";
-import { useState } from "react";
 import { MenuIcon, X } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useState } from "react";
+import NavIcons from "./NavIcons";
+import NavLink from "./NavLink";
+import Search from "./Search";
 
 const categories = [
   { name: "All", slug: "" },
@@ -42,14 +43,7 @@ function Navigation() {
       {/* Desktop Nav */}
       <ul className="hidden md:flex flex-row gap-4 md:gap-8 xl:gap-12 items-center justify-between">
         <li>
-          <Link
-            href="/"
-            className={`hover:text-brand-500 transition-colors ${
-              pathname === "/" ? "text-brand-500" : ""
-            }`}
-          >
-            Home
-          </Link>
+          <NavLink href="/" title="Home" />
         </li>
         <li>
           <DropdownMenu>
@@ -66,21 +60,17 @@ function Navigation() {
             <DropdownMenuContent>
               {categories.map((cat) => (
                 <DropdownMenuItem key={cat.slug} asChild>
-                  <Link href={`/products/${cat.slug}`}>{cat.name}</Link>
+                  <NavLink
+                    href={`/products/${cat.slug}`}
+                    title={`${cat.name}`}
+                  />
                 </DropdownMenuItem>
               ))}
             </DropdownMenuContent>
           </DropdownMenu>
         </li>
         <li>
-          <Link
-            href="/contact"
-            className={`hover:text-brand-500 transition-colors ${
-              pathname.includes("/contact") ? "text-brand-500" : ""
-            }`}
-          >
-            Contact
-          </Link>
+          <NavLink href="/contact" title="Contact" />
         </li>
 
         <li>
@@ -111,15 +101,12 @@ function Navigation() {
             {/* Mobile Menu Items */}
             <ul className="space-y-4">
               <li>
-                <Link
+                <NavLink
                   href="/"
+                  title="Home"
                   onClick={closeMenu}
-                  className={`block py-2 text-lg hover:text-brand-500 transition-colors ${
-                    pathname === "/" ? "text-brand-500" : ""
-                  }`}
-                >
-                  Home
-                </Link>
+                  className="block py-2 text-lg"
+                />
               </li>
 
               <li>
@@ -134,13 +121,12 @@ function Navigation() {
                   <ul className="mt-2 ml-4 space-y-2">
                     {categories.map((cat) => (
                       <li key={cat.slug}>
-                        <Link
+                        <NavLink
                           href={`/products/${cat.slug}`}
                           onClick={closeMenu}
-                          className="block py-1 text-gray-600 dark:text-gray-300 hover:text-brand-500 transition-colors"
-                        >
-                          {cat.name}
-                        </Link>
+                          title={`${cat.name}`}
+                          className="block py-1 text-gray-600 dark:text-gray-300"
+                        />
                       </li>
                     ))}
                   </ul>
@@ -148,15 +134,12 @@ function Navigation() {
               </li>
 
               <li>
-                <Link
+                <NavLink
                   href="/contact"
                   onClick={closeMenu}
-                  className={`block py-2 text-lg hover:text-brand-500 transition-colors ${
-                    pathname.includes("/contact") ? "text-brand-500" : ""
-                  }`}
-                >
-                  Contact
-                </Link>
+                  title="Contact"
+                  className="block py-2 text-lg"
+                />
               </li>
 
               <li className="pt-4 border-t dark:border-gray-700">
