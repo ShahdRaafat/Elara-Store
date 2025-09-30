@@ -59,8 +59,28 @@ export async function signInWithGoogle() {
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",
   });
-  console.log(data);
+
   if (error) {
     throw new Error(error.message);
   }
+}
+
+export async function ensureProfile() {
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser();
+
+  if (error) throw new Error(error.message);
+  if (!user) return null;
+
+  const { error: profileError } = await supabase.from("profiles").upsert({
+    id: user.id,
+    email: user.email,
+    full_name: user.user_metadata.full_name,
+  });
+
+  if (profileError) throw new Error(profileError.message);
+
+  return user;
 }
