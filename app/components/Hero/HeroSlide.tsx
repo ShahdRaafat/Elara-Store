@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 interface HeroSlideProps {
   slide: {
@@ -26,9 +27,13 @@ function HeroSlide({ slide }: HeroSlideProps) {
         <p className="text-grey-600 max-w-md mx-auto md:mx-0">
           {slide.description}
         </p>
-        <Button className="mt-4">
-          {slide.buttonText}
-          <ArrowRight className="ml-2 h-4 w-4" />
+        <Button className="mt-4 ">
+          <Link href="/products" className="flex items-center">
+            {slide.buttonText}
+            <span>
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </span>
+          </Link>
         </Button>
       </div>
 

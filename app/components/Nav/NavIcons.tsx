@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { HeartIcon, UserIcon } from "lucide-react";
+import { HeartIcon, LogIn, LogInIcon, UserIcon } from "lucide-react";
 import CartIcon from "./CartIcon";
 import Link from "next/link";
 
@@ -19,6 +19,12 @@ function NavIcons() {
       <Button size="icon" variant="icon" asChild>
         <Link href="/cart" className="relative">
           <CartIcon />
+        </Link>
+      </Button>
+
+      <Button size="sm" asChild>
+        <Link href="/login" className="relative">
+          Login
         </Link>
       </Button>
     </div>
