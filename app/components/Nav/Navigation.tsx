@@ -9,7 +9,6 @@ import {
 import { MenuIcon, X } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import NavIcons from "./NavIcons";
 import NavLink from "./NavLink";
 import Search from "./Search";
 
@@ -20,8 +19,10 @@ const categories = [
   { name: "Shoes", slug: "shoes" },
   { name: "Accessories", slug: "accessories" },
 ];
-
-function Navigation() {
+interface NavigationProps {
+  children: React.ReactNode;
+}
+function Navigation({ children }: NavigationProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname();
 
@@ -75,9 +76,7 @@ function Navigation() {
         <li>
           <Search />
         </li>
-        <li>
-          <NavIcons />
-        </li>
+        <li>{children}</li>
       </ul>
 
       {/* Mobile Menu Overlay */}
@@ -146,9 +145,7 @@ function Navigation() {
               </li>
 
               <li className="pt-4">
-                <div onClick={closeMenu}>
-                  <NavIcons />
-                </div>
+                <div onClick={closeMenu}>{children}</div>
               </li>
             </ul>
           </div>

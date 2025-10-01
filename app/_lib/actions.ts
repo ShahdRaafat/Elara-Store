@@ -1,10 +1,14 @@
-import supabase from "@/app/_lib/supabase";
+"use server";
+import { createClient } from "@/app/_lib/supabase/server";
 import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 
-export async function signUp(formData: FormData) {
-  const email = formData.get("email") as string;
-  const password = formData.get("password") as string;
-  const fullName = formData.get("fullName") as string;
+export async function signUpAction(
+  email: string,
+  password: string,
+  fullName: string
+) {
+  const supabase = await createClient();
 
   const { data, error } = await supabase.auth.signUp({
     email,
@@ -18,7 +22,7 @@ export async function signUp(formData: FormData) {
 
   if (error) throw new Error(error.message);
 
-  //save user to profiles table
+  // Save user to profiles table
   if (data.user) {
     const { error: profileError } = await supabase
       .from("profiles")
@@ -29,11 +33,14 @@ export async function signUp(formData: FormData) {
       throw new Error(profileError.message);
     }
   }
+
+  revalidatePath("/", "layout");
+  redirect("/");
 }
 
-export async function signIn(formData: FormData) {
-  const email = formData.get("email") as string;
-  const password = formData.get("password") as string;
+export async function signInAction(email: string, password: string) {
+  const supabase = await createClient();
+
   const { data, error } = await supabase.auth.signInWithPassword({
     email,
     password,
@@ -42,45 +49,39 @@ export async function signIn(formData: FormData) {
   if (error) {
     throw new Error(error.message);
   }
+
+  revalidatePath("/", "layout");
   redirect("/");
 }
 
-export async function signOut() {
+export async function signOutAction() {
+  const supabase = await createClient();
+
   const { error } = await supabase.auth.signOut();
 
   if (error) {
     throw new Error(error.message);
   }
 
+  revalidatePath("/", "layout");
   redirect("/");
 }
 
-export async function signInWithGoogle() {
+export async function signInWithGoogleAction() {
+  const supabase = await createClient();
+
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",
+    options: {
+      redirectTo: `http://localhost:3000//auth/callback`,
+    },
   });
 
   if (error) {
     throw new Error(error.message);
   }
-}
 
-export async function ensureProfile() {
-  const {
-    data: { user },
-    error,
-  } = await supabase.auth.getUser();
-
-  if (error) throw new Error(error.message);
-  if (!user) return null;
-
-  const { error: profileError } = await supabase.from("profiles").upsert({
-    id: user.id,
-    email: user.email,
-    full_name: user.user_metadata.full_name,
-  });
-
-  if (profileError) throw new Error(profileError.message);
-
-  return user;
+  if (data.url) {
+    redirect(data.url);
+  }
 }
