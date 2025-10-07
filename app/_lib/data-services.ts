@@ -27,7 +27,33 @@ export async function getProducts() {
 
   if (error) {
     console.error(error);
-    throw new Error("Cabins could not be loaded");
+    throw new Error("Products could not be loaded");
   }
   return products;
+}
+export async function getProduct(productId: string) {
+  const supabase = await createClient();
+  const { data: product, error } = await supabase
+    .from("products")
+    .select("*")
+    .eq("id", productId)
+    .single();
+
+  if (error) {
+    throw new Error("Product is not found");
+  }
+
+  return product;
+}
+
+export async function getProductVariants(productId: string) {
+  const supabase = await createClient();
+  const { data: productVariants, error } = await supabase
+    .from("product_variants")
+    .select("*")
+    .eq("product_id", productId);
+
+  if (error) throw new Error("Couldn't find variants");
+
+  return productVariants;
 }
