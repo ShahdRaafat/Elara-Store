@@ -1,9 +1,8 @@
 import { Product, ProductVariants } from "@/app/types/product";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft, HeartIcon, Minus, Plus } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import AddToCartButton from "./AddToCartButton";
+import ProductControls from "./ProductControls";
 
 interface ProductDetailsProps {
   product: Product;
@@ -39,35 +38,10 @@ function ProductDetails({ product, productVariants }: ProductDetailsProps) {
           </p>
           <p className="text-gray-600 mb-6">{product.description}</p>
 
-          <div className="my-6 flex flex-col gap-4">
-            <span className="font-bold">Size</span>
-            <div className="flex gap-3">
-              {productVariants.map((v) => (
-                <Button variant="outline" key={v.id}>
-                  {v.size}
-                </Button>
-              ))}
-            </div>
-          </div>
-
-          <div className=" mt-8 mb-6 flex flex-col gap-4">
-            <span className="font-bold">Quantity</span>
-            <div className="flex items-center flex-1  ">
-              <Button variant="outline" size="icon">
-                <Minus />
-              </Button>
-              <span className="px-3 font-bold">1</span>
-              <Button variant="outline" size="icon">
-                <Plus />
-              </Button>
-            </div>
-          </div>
-          <div className="flex gap-4 mt-12">
-            <AddToCartButton product={product} />
-            <Button variant="outline">
-              <HeartIcon />
-            </Button>
-          </div>
+          <ProductControls
+            product={product}
+            productVariants={productVariants}
+          />
         </div>
       </div>
     </div>
