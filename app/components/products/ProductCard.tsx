@@ -11,6 +11,7 @@ import Image from "next/image";
 import AddToCartButton from "./AddToCartButton";
 import Link from "next/link";
 import { HeartIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
 // import AddToCartButton from "./AddToCartButton";
 
 interface ProductCardProps {
@@ -39,7 +40,13 @@ function ProductCard({ product }: ProductCardProps) {
           <p>${product.price.toFixed(2)}</p>
         </CardContent>
         <CardAction>
-          <AddToCartButton product={product} />
+          {product.has_variants ? (
+            <Button className=" rounded-lg w-full " size="lg">
+              Choose Options
+            </Button>
+          ) : (
+            <AddToCartButton product={product} quantity={1} />
+          )}
         </CardAction>
       </Card>
     </Link>

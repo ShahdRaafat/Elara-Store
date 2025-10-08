@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
 import "./globals.css";
 import Header from "./components/Nav/Header";
+import { CartProvider } from "./_contexts/CartContext";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -25,11 +26,13 @@ export default function RootLayout({
       <body
         className={` text-grey-700 min-h-screen flex flex-col ${montserrat.className} overflow-x-hidden antialiased`}
       >
-        <Header />
+        <CartProvider>
+          <Header />
 
-        <div className="flex-1 px-4 sm:px-6 md:px-8  pb-8 lg:py-12 grid">
-          <main className="max-w-[1350px] mx-auto w-full">{children}</main>
-        </div>
+          <div className="flex-1 px-4 sm:px-6 md:px-8  pb-8 lg:py-12 grid">
+            <main className="max-w-[1350px] mx-auto w-full">{children}</main>
+          </div>
+        </CartProvider>
       </body>
     </html>
   );

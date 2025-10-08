@@ -2,20 +2,17 @@ import { Product } from "./product";
 
 export interface CartItemType extends Product {
   quantity: number;
-}
-
-export interface Cart {
-  products: CartItemType[];
+  size?: string;
 }
 
 export interface CartContextType {
-  cart: Cart;
-  addToCart: (product: Product) => void;
-  deleteFromCart: (productId: number) => void;
-  increaseQuantity: (productId: number) => void;
-  decreaseQuantity: (productId: number) => void;
-  getTotalItems: () => number;
-  getTotalPrice: () => number;
+  cart: CartItemType[];
+  addToCart: (product: Product, quantity: number, size?: string) => void;
+  // deleteFromCart: (productId: number) => void;
+  // increaseQuantity: (productId: number) => void;
+  // decreaseQuantity: (productId: number) => void;
+  // getTotalItems: () => number;
+  // getTotalPrice: () => number;
 }
 
 export interface CartContextProviderProps {

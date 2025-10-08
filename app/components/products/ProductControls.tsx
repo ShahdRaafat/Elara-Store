@@ -11,7 +11,9 @@ interface ProductControlsProps {
 }
 
 function ProductControls({ product, productVariants }: ProductControlsProps) {
-  const [selectedSize, setSelectedSize] = useState<string | null>(null);
+  const [selectedSize, setSelectedSize] = useState<string | undefined>(
+    undefined
+  );
   const [quantity, setQuantity] = useState(1);
   const maxStock =
     productVariants.length > 0
@@ -60,7 +62,11 @@ function ProductControls({ product, productVariants }: ProductControlsProps) {
 
       {/* Add to cart */}
       <div className="flex gap-4 mt-12">
-        <AddToCartButton product={product} />
+        <AddToCartButton
+          product={product}
+          quantity={quantity}
+          size={selectedSize}
+        />
         <Button variant="outline">
           <HeartIcon />
         </Button>
