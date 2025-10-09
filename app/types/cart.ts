@@ -14,11 +14,11 @@ export interface CartItemType {
 export interface CartContextType {
   cart: CartItemType[];
   addToCart: (product: Product, quantity: number, size?: string) => void;
-  // deleteFromCart: (productId: number) => void;
-  // increaseQuantity: (productId: number) => void;
-  // decreaseQuantity: (productId: number) => void;
-  // getTotalItems: () => number;
-  // getTotalPrice: () => number;
+  deleteFromCart: (productId: string, size?: string) => void;
+  increaseQuantity: (productId: string, size?: string) => void;
+  decreaseQuantity: (productId: string, size?: string) => void;
+  getTotalItems: () => number;
+  getTotalPrice: () => number;
 }
 
 export interface CartContextProviderProps {

@@ -39,8 +39,58 @@ function CartProvider({ children }: CartContextProviderProps) {
     }
   }
 
+  function deleteFromCart(productId: string, size?: string) {
+    setCart(
+      cart.filter((item) => !(item.id === productId && item.size === size))
+    );
+  }
+
+  function increaseQuantity(productId: string, size?: string) {
+    setCart(
+      cart.map((item) =>
+        item.id === productId && item.size === size
+          ? { ...item, quantity: item.quantity + 1 }
+          : item
+      )
+    );
+  }
+
+  function decreaseQuantity(productId: string, size?: string) {
+    setCart(
+      cart
+        .map((item) =>
+          item.id === productId && item.size === size
+            ? { ...item, quantity: item.quantity - 1 }
+            : item
+        )
+        .filter((item) => item.quantity > 0)
+    );
+  }
+
+  function getTotalItems() {
+    const totalItems = cart.reduce((acc, item) => acc + item.quantity, 0);
+    return totalItems;
+  }
+  function getTotalPrice() {
+    const totalPrice = cart.reduce(
+      (acc, item) => acc + item.quantity * item.price,
+      0
+    );
+    return totalPrice;
+  }
+
   return (
-    <CartContext.Provider value={{ cart, addToCart }}>
+    <CartContext.Provider
+      value={{
+        cart,
+        addToCart,
+        deleteFromCart,
+        increaseQuantity,
+        decreaseQuantity,
+        getTotalItems,
+        getTotalPrice,
+      }}
+    >
       {children}
     </CartContext.Provider>
   );

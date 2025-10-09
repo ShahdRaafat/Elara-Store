@@ -37,7 +37,7 @@ function ProductCard({ product }: ProductCardProps) {
           </CardDescription>
         </CardHeader>
         <CardContent className="flex justify-between items-center mt-auto ">
-          <p>${product.price.toFixed(2)}</p>
+          <p>LE {product.price.toFixed(2)}</p>
           <WishlistButton product={product} />
         </CardContent>
         <CardAction>
