@@ -12,6 +12,7 @@ import AddToCartButton from "./AddToCartButton";
 import Link from "next/link";
 import { HeartIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import WishlistButton from "./WishlistButton";
 // import AddToCartButton from "./AddToCartButton";
 
 interface ProductCardProps {
@@ -20,9 +21,8 @@ interface ProductCardProps {
 function ProductCard({ product }: ProductCardProps) {
   return (
     <Link href={`/products/${product.id}`} className="block h-full group">
-      <Card className="bg-white rounded-2xl transition-transform duration-300 group-hover:-translate-y-1 h-full">
+      <Card className="bg-white rounded-xl transition-transform duration-300 group-hover:-translate-y-1 h-full">
         <div className="relative w-full max-w-full h-90 group-hover:scale-105 transition-transform duration-300 ">
-          <HeartIcon className="" />
           <Image
             src={product.image_url}
             className="object-contain"
@@ -32,12 +32,13 @@ function ProductCard({ product }: ProductCardProps) {
         </div>
         <CardHeader>
           <CardTitle>{product.name}</CardTitle>
-          <CardDescription className="text-primary-500 font-bold">
+          <CardDescription className="text-brand-500 font-bold">
             {product.category}
           </CardDescription>
         </CardHeader>
         <CardContent className="flex justify-between items-center mt-auto ">
           <p>${product.price.toFixed(2)}</p>
+          <WishlistButton product={product} />
         </CardContent>
         <CardAction>
           {product.has_variants ? (

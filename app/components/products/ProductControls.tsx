@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { HeartIcon, Minus, Plus } from "lucide-react";
 import AddToCartButton from "./AddToCartButton";
 import { useState } from "react";
+import WishlistButton from "./WishlistButton";
 
 interface ProductControlsProps {
   product: Product;
@@ -81,15 +82,17 @@ function ProductControls({ product, productVariants }: ProductControlsProps) {
 
       {/* Add to cart */}
       <div className="flex gap-4 mt-12">
-        <AddToCartButton
-          product={product}
-          quantity={quantity}
-          size={selectedSize}
-          disabled={product.has_variants && !selectedSize}
-        />
-        <Button variant="outline">
-          <HeartIcon />
-        </Button>
+        <div className="flex-1">
+          <AddToCartButton
+            product={product}
+            quantity={quantity}
+            size={selectedSize}
+            disabled={product.has_variants && !selectedSize}
+          />
+        </div>
+        <div>
+          <WishlistButton product={product} />
+        </div>
       </div>
 
       {mustChooseSize && (
