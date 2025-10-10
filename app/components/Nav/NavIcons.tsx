@@ -1,12 +1,37 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { HeartIcon, LogOutIcon, UserIcon } from "lucide-react";
 import CartIcon from "./CartIcon";
 import Link from "next/link";
-import { getCurrentUser } from "@/app/_lib/data-services";
-import { signOutAction } from "@/app/_lib/actions";
+import { createClient } from "@/app/_lib/supabase/client";
+import { User } from "@supabase/supabase-js";
 
-async function NavIcons() {
-  const user = await getCurrentUser();
+export default function NavIcons() {
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const supabase = createClient();
+
+    supabase.auth.getUser().then(({ data }) => {
+      setUser(data.user);
+    });
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  async function handleLogout() {
+    const supabase = createClient();
+    await supabase.auth.signOut();
+    setUser(null);
+  }
 
   return (
     <div className="flex items-center gap-1">
@@ -33,14 +58,10 @@ async function NavIcons() {
           <Link href="/login">Login</Link>
         </Button>
       ) : (
-        <form action={signOutAction}>
-          <Button size="sm" type="submit" variant="icon">
-            <LogOutIcon className="size-4 mr-1" />
-          </Button>
-        </form>
+        <Button size="sm" variant="icon" onClick={handleLogout} title="Logout">
+          <LogOutIcon className="size-4 mr-1" />
+        </Button>
       )}
     </div>
   );
 }
-
-export default NavIcons;

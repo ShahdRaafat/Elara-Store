@@ -1,5 +1,5 @@
 import { createClient } from "./supabase/server";
-
+import { createPublicClient } from "./supabase/public";
 export async function getCurrentUser() {
   try {
     const supabase = await createClient();
@@ -22,7 +22,7 @@ export async function getCurrentUser() {
 }
 
 export async function getProducts() {
-  const supabase = await createClient();
+  const supabase = createPublicClient();
   const { data: products, error } = await supabase.from("products").select("*");
 
   if (error) {
@@ -32,7 +32,7 @@ export async function getProducts() {
   return products;
 }
 export async function getProductsByCategory(category: string) {
-  const supabase = await createClient();
+  const supabase = createPublicClient();
   const { data: products, error } = await supabase
     .from("products")
     .select("*")
@@ -45,7 +45,7 @@ export async function getProductsByCategory(category: string) {
   return products;
 }
 export async function getProduct(productId: string) {
-  const supabase = await createClient();
+  const supabase = createPublicClient();
   const { data: product, error } = await supabase
     .from("products")
     .select("*")
@@ -60,7 +60,7 @@ export async function getProduct(productId: string) {
 }
 
 export async function getProductVariants(productId: string) {
-  const supabase = await createClient();
+  const supabase = createPublicClient();
   const { data: productVariants, error } = await supabase
     .from("product_variants")
     .select("*")

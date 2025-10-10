@@ -12,6 +12,9 @@ import { useState } from "react";
 import NavLink from "./NavLink";
 import Search from "./Search";
 
+import dynamic from "next/dynamic";
+const NavIcons = dynamic(() => import("./NavIcons"), { ssr: false });
+
 const categories = [
   { name: "All", slug: "" },
   { name: "Clothes", slug: "clothes" },
@@ -19,10 +22,8 @@ const categories = [
   { name: "Shoes", slug: "shoes" },
   { name: "Accessories", slug: "accessories" },
 ];
-interface NavigationProps {
-  children: React.ReactNode;
-}
-function Navigation({ children }: NavigationProps) {
+
+function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname();
 
@@ -76,7 +77,9 @@ function Navigation({ children }: NavigationProps) {
         <li>
           <Search />
         </li>
-        <li>{children}</li>
+        <li>
+          <NavIcons />
+        </li>
       </ul>
 
       {/* Mobile Menu Overlay */}
@@ -145,7 +148,9 @@ function Navigation({ children }: NavigationProps) {
               </li>
 
               <li className="pt-4">
-                <div onClick={closeMenu}>{children}</div>
+                <div onClick={closeMenu}>
+                  <NavIcons />
+                </div>
               </li>
             </ul>
           </div>
