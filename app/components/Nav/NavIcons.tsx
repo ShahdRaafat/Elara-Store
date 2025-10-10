@@ -34,7 +34,7 @@ async function NavIcons() {
         </Button>
       ) : (
         <form action={signOutAction}>
-          <Button size="sm" type="submit">
+          <Button size="sm" type="submit" variant="icon">
             <LogOutIcon className="size-4 mr-1" />
           </Button>
         </form>
