@@ -3,9 +3,9 @@ export default function Home() {
   return (
     <>
       <h2 className=" text-primary-500  py-4 text-xl md:text-2xl font-semibold text-center">
-        Products
+        Bags
       </h2>
-      <ProductsList category="all" />
+      <ProductsList category="Bags" />
     </>
   );
 }

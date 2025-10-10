@@ -1,9 +1,15 @@
-import { getProducts } from "@/app/_lib/data-services";
+import { getProducts, getProductsByCategory } from "@/app/_lib/data-services";
 import ProductCard from "./ProductCard";
 import { Product } from "@/app/types/product";
 
-async function ProductsList() {
-  const products = await getProducts();
+interface ProductsListProps {
+  category: string;
+}
+async function ProductsList({ category }: ProductsListProps) {
+  const products =
+    category === "all"
+      ? await getProducts()
+      : await getProductsByCategory(category);
 
   return (
     <div

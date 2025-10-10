@@ -31,6 +31,19 @@ export async function getProducts() {
   }
   return products;
 }
+export async function getProductsByCategory(category: string) {
+  const supabase = await createClient();
+  const { data: products, error } = await supabase
+    .from("products")
+    .select("*")
+    .eq("category", category);
+
+  if (error) {
+    console.error(error);
+    throw new Error("Products could not be loaded");
+  }
+  return products;
+}
 export async function getProduct(productId: string) {
   const supabase = await createClient();
   const { data: product, error } = await supabase
