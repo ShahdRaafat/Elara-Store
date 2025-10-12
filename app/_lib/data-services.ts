@@ -21,14 +21,29 @@ export async function getCurrentUser() {
   }
 }
 
-export async function getProducts() {
+export async function getProducts(sortBy?: string) {
   const supabase = createPublicClient();
-  const { data: products, error } = await supabase.from("products").select("*");
+
+  // Default sort
+  let column = "created_at";
+  let ascending = true;
+
+  if (sortBy) {
+    const [col, dir] = sortBy.split("-");
+    column = col;
+    ascending = dir === "asc";
+  }
+
+  const { data: products, error } = await supabase
+    .from("products")
+    .select("*")
+    .order(column, { ascending });
 
   if (error) {
     console.error(error);
-    throw new Error("Products could not be loaded");
+    return [];
   }
+
   return products;
 }
 export async function getProductsByCategory(category: string) {

@@ -4,11 +4,12 @@ import { Product } from "@/app/types/product";
 
 interface ProductsListProps {
   category: string;
+  sortBy?: string;
 }
-async function ProductsList({ category }: ProductsListProps) {
+async function ProductsList({ category, sortBy }: ProductsListProps) {
   const products =
     category === "all"
-      ? await getProducts()
+      ? await getProducts(sortBy)
       : await getProductsByCategory(category);
 
   return (
