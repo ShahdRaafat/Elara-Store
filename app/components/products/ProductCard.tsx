@@ -22,10 +22,10 @@ function ProductCard({ product }: ProductCardProps) {
   return (
     <Link href={`/products/${product.id}`} className="block h-full group">
       <Card className="bg-white rounded-xl transition-transform duration-300 group-hover:-translate-y-1 h-full">
-        <div className="relative w-full max-w-full h-90 group-hover:scale-105 transition-transform duration-300 ">
+        <div className="relative  w-full max-w-full h-90 group-hover:scale-105 transition-transform duration-300 ">
           <Image
             src={product.image_url}
-            className="object-contain"
+            className="object-contain p-6"
             alt={`${product.name}`}
             fill
           />
