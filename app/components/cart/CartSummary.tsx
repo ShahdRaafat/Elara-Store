@@ -9,6 +9,7 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import Heading from "../Heading";
+import Link from "next/link";
 
 const SHIPPING_COST = 70;
 function CartSummary() {
@@ -46,7 +47,9 @@ function CartSummary() {
           </CardContent>
 
           <CardFooter>
-            <Button className="w-full rounded-lg">Checkout</Button>
+            <Link href="/checkout" className="w-full">
+              <Button className="rounded-lg w-full ">Checkout</Button>
+            </Link>
           </CardFooter>
         </Card>
       ) : (

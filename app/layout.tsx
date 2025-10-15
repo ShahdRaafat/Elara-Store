@@ -32,7 +32,7 @@ export default function RootLayout({
           <WishlistProvider>
             <Header />
 
-            <div className="flex-1 px-4 sm:px-6 md:px-8  pb-8 lg:py-12 grid">
+            <div className="flex-1 px-4 py-6 sm:px-6 sm:py-8 md:px-8  pb-8 lg:py-12 grid">
               <main className="max-w-[1350px] mx-auto w-full">{children}</main>
             </div>
             <Toaster
