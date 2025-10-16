@@ -78,7 +78,9 @@ function CartProvider({ children }: CartContextProviderProps) {
     );
     return totalPrice;
   }
-
+  function clearCart() {
+    setCart([]);
+  }
   return (
     <CartContext.Provider
       value={{
@@ -89,6 +91,7 @@ function CartProvider({ children }: CartContextProviderProps) {
         decreaseQuantity,
         getTotalItems,
         getTotalPrice,
+        clearCart,
       }}
     >
       {children}

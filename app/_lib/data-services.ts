@@ -85,3 +85,28 @@ export async function getProductVariants(productId: string) {
 
   return productVariants;
 }
+
+export async function getVariantId(productId: string, size: string) {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("product_variants")
+    .select("id")
+    .eq("product_id", productId)
+    .eq("size", size)
+    .single();
+
+  if (error) throw new Error(error.message);
+  return data.id;
+}
+
+export async function getOrder(orderId: string) {
+  const supabase = await createClient();
+
+  const { data: order, error } = await supabase
+    .from("orders")
+    .select("*, order_items(*, products(name, image_url))")
+    .eq("id", orderId)
+    .single();
+  if (error) throw new Error(error.message);
+  return order;
+}

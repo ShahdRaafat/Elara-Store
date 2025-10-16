@@ -3,6 +3,11 @@ import { useForm } from "react-hook-form";
 import ContactSection from "./ContactSection";
 import DeliverySection from "./DeliverySection";
 import PaymentSection from "./PaymentSection";
+import { useCart } from "@/app/_contexts/CartContext";
+import toast from "react-hot-toast";
+import { createOrder } from "@/app/_lib/actions";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
 
 export interface FormInputs {
   firstName: string;
@@ -18,9 +23,23 @@ export interface FormInputs {
 
 export default function CheckoutForm() {
   const form = useForm<FormInputs>({ mode: "onBlur" });
+  const { cart, clearCart, getTotalPrice } = useCart();
+  const totalPrice = getTotalPrice();
+  const router = useRouter();
 
-  function onSubmit(data: FormInputs) {
-    console.log("Checkout Data:", data);
+  async function onSubmit(data: FormInputs) {
+    try {
+      const order = await createOrder({
+        ...data,
+        cart,
+        total: totalPrice,
+      });
+      clearCart();
+      router.push(`/ordersuccess?orderId=${order.id}`);
+    } catch (err) {
+      console.error(err);
+      toast.error("Something went wrong while creating your order");
+    }
   }
 
   return (
@@ -30,12 +49,13 @@ export default function CheckoutForm() {
         <DeliverySection form={form} />
         <PaymentSection form={form} />
 
-        <button
+        <Button
+          type="submit"
           disabled={form.formState.isSubmitting}
-          className="w-full mt-6 bg-brand-500 text-white py-3 rounded-lg font-semibold hover:bg-brand-600 transition"
+          className="w-full mt-6"
         >
           {form.formState.isSubmitting ? "Processing..." : "Place Order"}
-        </button>
+        </Button>
       </form>
     </div>
   );

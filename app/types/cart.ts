@@ -9,6 +9,7 @@ export interface CartItemType {
   image_url: string;
   quantity: number;
   size?: string;
+  has_variants: boolean;
 }
 
 export interface CartContextType {
@@ -19,6 +20,7 @@ export interface CartContextType {
   decreaseQuantity: (productId: string, size?: string) => void;
   getTotalItems: () => number;
   getTotalPrice: () => number;
+  clearCart: () => void;
 }
 
 export interface CartContextProviderProps {
