@@ -1,9 +1,9 @@
 "use server";
 import { createClient } from "@/app/_lib/supabase/server";
-import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { OrderData } from "../types/order";
-import { getCurrentUser, getVariantId } from "./data-services";
+import { getCurrentUser, insertOrder, insertOrderItems } from "./data-services";
 
 export async function signUpAction(
   email: string,
@@ -88,56 +88,34 @@ export async function signInWithGoogleAction() {
   }
 }
 
-export async function createOrder(formData: OrderData) {
-  const supabase = await createClient();
+export async function createCashOrder(formData: OrderData) {
+  try {
+    const user = await getCurrentUser();
 
-  const user = await getCurrentUser();
+    const orderData = {
+      user_id: user?.id ?? null,
+      first_name: formData.firstName,
+      last_name: formData.lastName,
+      email: formData.email,
+      phone: formData.phone,
+      address: formData.address,
+      city: formData.city,
+      governorate: formData.governorate,
+      postal_code: formData.postalCode,
+      payment_method: "cash" as const,
+      total: formData.total,
+      status: "processing",
+      payment_status: "pending" as const,
+    };
 
-  const { data: order, error: OrderError } = await supabase
-    .from("orders")
-    .insert([
-      {
-        user_id: user?.id ?? null,
-        first_name: formData.firstName,
-        last_name: formData.lastName,
-        email: formData.email,
-        phone: formData.phone,
-        address: formData.address,
-        city: formData.city,
-        governorate: formData.governorate,
-        postal_code: formData.postalCode,
-        payment_method: formData.paymentMethod,
-        total: formData.total,
-        status: "processing",
-        payment_status: formData.paymentMethod === "cash" ? "pending" : "paid",
-      },
-    ])
-    .select()
-    .single();
-  if (OrderError) throw new Error(OrderError.message);
+    const order = await insertOrder(orderData);
 
-  const orderItems = await Promise.all(
-    formData.cart.map(async (item) => {
-      let variant_id: string | null = null;
+    // Insert order items
+    await insertOrderItems(order.id, formData.cart);
 
-      if (item.has_variants) {
-        variant_id = await getVariantId(item.id, item.size ?? "");
-      }
-      return {
-        order_id: order.id,
-        product_id: item.id,
-        variant_id,
-        quantity: item.quantity,
-        price: item.price,
-      };
-    })
-  );
-
-  const { error: OrderItemsError } = await supabase
-    .from("order_items")
-    .insert(orderItems);
-
-  if (OrderItemsError) throw new Error(OrderItemsError.message);
-
-  return order;
+    return order;
+  } catch (error) {
+    console.error("Cash order error:", error);
+    throw error;
+  }
 }

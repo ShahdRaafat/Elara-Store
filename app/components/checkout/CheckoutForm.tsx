@@ -5,9 +5,10 @@ import DeliverySection from "./DeliverySection";
 import PaymentSection from "./PaymentSection";
 import { useCart } from "@/app/_contexts/CartContext";
 import toast from "react-hot-toast";
-import { createOrder } from "@/app/_lib/actions";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { createStripeSession } from "../../_lib/stripeAction";
+import { createCashOrder } from "@/app/_lib/actions";
 
 export interface FormInputs {
   firstName: string;
@@ -29,7 +30,21 @@ export default function CheckoutForm() {
 
   async function onSubmit(data: FormInputs) {
     try {
-      const order = await createOrder({
+      console.log(data.paymentMethod);
+
+      if (data.paymentMethod === "card") {
+        // Stripe
+        const res = await createStripeSession({
+          ...data,
+          cart,
+          total: totalPrice,
+        });
+        window.location.href = res.url ?? "";
+        return;
+      }
+
+      //Cash
+      const order = await createCashOrder({
         ...data,
         cart,
         total: totalPrice,
@@ -38,7 +53,7 @@ export default function CheckoutForm() {
       router.push(`/ordersuccess?orderId=${order.id}`);
     } catch (err) {
       console.error(err);
-      toast.error("Something went wrong while creating your order");
+      toast.error("Something went wrong");
     }
   }
 

@@ -1,5 +1,7 @@
-import { createClient } from "./supabase/server";
+import { CartItemType } from "../types/cart";
+import { Order } from "../types/order";
 import { createPublicClient } from "./supabase/public";
+import { createClient } from "./supabase/server";
 export async function getCurrentUser() {
   try {
     const supabase = await createClient();
@@ -107,6 +109,46 @@ export async function getOrder(orderId: string) {
     .select("*, order_items(*, products(name, image_url))")
     .eq("id", orderId)
     .single();
+  if (error) throw new Error(error.message);
+  return order;
+}
+
+export async function insertOrderItems(
+  orderId: string,
+  cartItems: CartItemType[]
+) {
+  const supabase = await createClient();
+
+  const orderItems = await Promise.all(
+    cartItems.map(async (item) => {
+      let variant_id: string | null = null;
+      if (item.has_variants) {
+        variant_id = await getVariantId(item.id, item.size ?? "");
+      }
+      return {
+        order_id: orderId,
+        product_id: item.id,
+        variant_id,
+        quantity: item.quantity,
+        price: item.price,
+      };
+    })
+  );
+
+  const { error } = await supabase.from("order_items").insert(orderItems);
+  if (error) throw new Error(error.message);
+}
+
+// Insert order in database
+export async function insertOrder(orderData: Order) {
+  const supabase = await createClient();
+
+  const { data: order, error } = await supabase
+    .from("orders")
+    .insert([orderData])
+    .select()
+    .single();
+
   if (error) throw new Error(error.message);
   return order;
 }
