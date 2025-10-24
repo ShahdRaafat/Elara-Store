@@ -1,5 +1,5 @@
 import { CartItemType } from "../types/cart";
-import { Order } from "../types/order";
+import { Order, OrderInsert } from "../types/order";
 import { createPublicClient } from "./supabase/public";
 import { createClient } from "./supabase/server";
 export async function getCurrentUser() {
@@ -10,7 +10,7 @@ export async function getCurrentUser() {
       data: { user },
       error,
     } = await supabase.auth.getUser();
-
+    console.log(user);
     if (error) {
       console.error("Error fetching user:", error);
       return null;
@@ -140,7 +140,7 @@ export async function insertOrderItems(
 }
 
 // Insert order in database
-export async function insertOrder(orderData: Order) {
+export async function insertOrder(orderData: OrderInsert) {
   const supabase = await createClient();
 
   const { data: order, error } = await supabase

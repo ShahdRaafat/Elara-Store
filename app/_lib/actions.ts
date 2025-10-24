@@ -119,3 +119,55 @@ export async function createCashOrder(formData: OrderData) {
     throw error;
   }
 }
+
+export async function getUserInfo() {
+  const user = await getCurrentUser();
+  if (!user) throw new Error("Not authenticated");
+
+  const supabase = await createClient();
+  const { data: userInfo, error } = await supabase
+    .from("profiles")
+    .select("*")
+    .eq("id", user.id)
+    .single();
+
+  if (error) throw new Error(error.message);
+  return userInfo;
+}
+
+export async function updateUserInfo(formData: FormData) {
+  const user = await getCurrentUser();
+  if (!user) throw new Error("Not authenticated");
+
+  const supabase = await createClient();
+  const updates = {
+    full_name: formData.get("full_name"),
+    phone: formData.get("phone"),
+    address: formData.get("address"),
+    city: formData.get("city"),
+  };
+
+  const { error } = await supabase
+    .from("profiles")
+    .update(updates)
+    .eq("id", user.id);
+
+  if (error) throw new Error(error.message);
+
+  revalidatePath("/account");
+}
+
+export async function getUserOrders() {
+  const user = await getCurrentUser();
+  if (!user) throw new Error("Not authenticated");
+
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("orders")
+    .select("*, order_items(*, products(name, image_url))")
+    .eq("user_id", user.id)
+    .order("created_at", { ascending: false });
+
+  if (error) throw new Error(error.message);
+  return data;
+}

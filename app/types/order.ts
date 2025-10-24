@@ -21,7 +21,7 @@ export interface OrderItem {
   quantity: number;
   products: { name: string; image_url: string };
 }
-export interface Order {
+export interface OrderInsert {
   user_id: string | null;
   first_name: string;
   last_name: string;
@@ -36,4 +36,9 @@ export interface Order {
   status: string;
   payment_status: "pending" | "paid";
   stripe_session_id?: string;
+}
+export interface Order extends OrderInsert {
+  id: string;
+  created_at: string;
+  order_items?: OrderItem[];
 }

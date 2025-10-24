@@ -5,6 +5,7 @@ import { OrderItem } from "../types/order";
 import Image from "next/image";
 import Link from "next/link";
 import { createOrderFromStripeSession } from "../_lib/stripeAction";
+import OrderItemRow from "../components/account/OrderItemRow";
 
 export default async function SuccessPage({
   searchParams,
@@ -65,22 +66,7 @@ export default async function SuccessPage({
         <h2 className="text-lg font-semibold mb-4">📋 Order Summary</h2>
         <ul className="divide-y divide-gray-200">
           {order.order_items.map((item: OrderItem) => (
-            <li key={item.id} className="py-3 flex items-center gap-3">
-              <div className="relative w-16 h-16">
-                <Image
-                  src={item.products?.image_url || "/placeholder.png"}
-                  alt={item.products?.name}
-                  className="absolute rounded-md object-cover"
-                  fill
-                />
-              </div>
-              <div className="flex-1">
-                <p className="font-medium">{item.products?.name}</p>
-                <p className="text-sm text-gray-500">
-                  Qty: {item.quantity} × {item.price} EGP
-                </p>
-              </div>
-            </li>
+            <OrderItemRow item={item} key={item.id} />
           ))}
         </ul>
 

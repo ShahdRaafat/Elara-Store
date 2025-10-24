@@ -36,7 +36,7 @@ export default function NavIcons() {
   return (
     <div className="flex items-center gap-1">
       <Button size="icon" variant="icon" asChild>
-        <Link href="/profile">
+        <Link href="/account">
           <UserIcon className="size-4.5" />
         </Link>
       </Button>
