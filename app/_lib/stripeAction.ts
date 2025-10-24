@@ -1,8 +1,14 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { CartItemType } from "../types/cart";
 import { OrderData } from "../types/order";
-import { getCurrentUser, insertOrder, insertOrderItems } from "./data-services";
+import {
+  getCurrentUser,
+  getOrder,
+  insertOrder,
+  insertOrderItems,
+} from "./data-services";
 import { stripe } from "./stripe";
 import { createClient } from "./supabase/server";
 
@@ -34,16 +40,6 @@ export async function createStripeSession(formData: OrderData) {
         city: formData.city,
         governorate: formData.governorate,
         postalCode: formData.postalCode || "",
-        cartItems: JSON.stringify(
-          formData.cart.map((item) => ({
-            id: item.id,
-            name: item.name,
-            quantity: item.quantity,
-            price: item.price,
-            size: item.size,
-            has_variants: item.has_variants,
-          }))
-        ),
       },
     });
 
@@ -54,7 +50,10 @@ export async function createStripeSession(formData: OrderData) {
   }
 }
 
-export async function createOrderFromStripeSession(sessionId: string) {
+export async function createOrderFromStripeSession(
+  sessionId: string,
+  cartItems: CartItemType[]
+) {
   try {
     const session = await stripe.checkout.sessions.retrieve(sessionId);
 
@@ -77,7 +76,7 @@ export async function createOrderFromStripeSession(sessionId: string) {
       .single();
 
     if (existingOrder) {
-      return existingOrder;
+      return await getOrder(existingOrder.id);
     }
 
     const user = await getCurrentUser();
@@ -104,10 +103,10 @@ export async function createOrderFromStripeSession(sessionId: string) {
     const order = await insertOrder(orderData);
 
     // Insert order items
-    const cartItems = JSON.parse(session.metadata.cartItems || "[]");
     await insertOrderItems(order.id, cartItems);
-
-    return order;
+    revalidatePath("/");
+    revalidatePath("/ordersuccess");
+    return await getOrder(order.id);
   } catch (error) {
     console.error("Error processing Stripe payment:", error);
     throw error;

@@ -18,15 +18,15 @@ interface UserInfoProps {
 
 export default function UserInfoForm({ user }: UserInfoProps) {
   return (
-    <div className="bg-white dark:bg-zinc-900 rounded-3xl shadow-xl overflow-hidden border border-gray-100 dark:border-zinc-800">
+    <div className="bg-white dark:bg-zinc-900 rounded-xl shadow-xl border border-gray-100 dark:border-zinc-800">
       <SectionHeader
         icon={User}
         title="Personal Information"
         description="Update your account details and personal information"
       />
 
-      <form action={updateUserInfo} className="p-8">
-        <div className="space-y-6">
+      <form action={updateUserInfo} className="p-8 ">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
           <UserFormInput
             id="full_name"
             name="full_name"

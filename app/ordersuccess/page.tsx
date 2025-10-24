@@ -1,48 +1,23 @@
-// app/ordersuccess/page.tsx - Alternative without redirect
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getOrder } from "../_lib/data-services";
-import { OrderItem } from "../types/order";
-import Image from "next/image";
-import Link from "next/link";
-import { createOrderFromStripeSession } from "../_lib/stripeAction";
 import OrderItemRow from "../components/account/OrderItemRow";
+import OrderSuccessClient from "../components/checkout/OrderSuccessClient";
+import { OrderItem } from "../types/order";
 
 export default async function SuccessPage({
   searchParams,
 }: {
   searchParams: { orderId?: string; session_id?: string };
 }) {
-  let order = null;
-
-  // If coming from Stripe, create order first
+  // If coming from Stripe, need to process on client side to access localStorage
   if (searchParams.session_id) {
-    try {
-      const createdOrder = await createOrderFromStripeSession(
-        searchParams.session_id
-      );
-      order = await getOrder(createdOrder.id);
-      console.log(order);
-    } catch (error) {
-      console.error("Payment error:", error);
-      return (
-        <div className="min-h-screen flex flex-col items-center justify-center gap-4">
-          <h1 className="text-2xl font-semibold text-red-600">
-            ❌ Payment Error
-          </h1>
-          <p className="text-gray-600">
-            There was an issue processing your payment
-          </p>
-          <Link href="/checkout">
-            <button className="mt-4 px-6 py-2 bg-brand-600 text-white rounded-lg">
-              Back to Checkout
-            </button>
-          </Link>
-        </div>
-      );
-    }
+    return <OrderSuccessClient sessionId={searchParams.session_id} />;
   }
-  // If coming with orderId, fetch the order
-  else if (searchParams.orderId) {
+
+  // If coming with orderId (Cash on Delivery), fetch the order
+  let order = null;
+  if (searchParams.orderId) {
     order = await getOrder(searchParams.orderId);
   }
 
@@ -51,7 +26,7 @@ export default async function SuccessPage({
     redirect("/");
   }
 
-  // Display order (works for both Cash and Card)
+  // Display order for Cash on Delivery
   return (
     <div className="max-w-3xl mx-auto py-10 text-center">
       <h1 className="text-3xl font-semibold text-green-600 mb-4">

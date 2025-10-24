@@ -2,7 +2,6 @@
 
 import { useCart } from "@/app/_contexts/CartContext";
 import { ShoppingCart } from "lucide-react";
-import Link from "next/link";
 
 function CartIcon() {
   const { getTotalItems } = useCart();
