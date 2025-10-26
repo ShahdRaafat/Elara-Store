@@ -27,9 +27,9 @@ function UserFormInput({
     <div className="space-y-2">
       <label
         htmlFor={id}
-        className=" text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-2"
+        className="text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-2"
       >
-        <Icon className="w-4 h-4 text-brand-500" />
+        <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-brand-500" />
         {label}
       </label>
       <input
@@ -40,7 +40,7 @@ function UserFormInput({
         defaultValue={defaultValue}
         required={required}
         disabled={disabled}
-        className={`w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all duration-200 placeholder:text-gray-400 ${
+        className={`w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base border rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all duration-200 placeholder:text-gray-400 ${
           disabled
             ? "border-gray-200 dark:border-zinc-800 bg-gray-50 dark:bg-zinc-900 text-gray-500 dark:text-gray-500 cursor-not-allowed"
             : "border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-gray-900 dark:text-gray-100"

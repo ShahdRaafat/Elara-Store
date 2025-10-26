@@ -25,8 +25,8 @@ export default function UserInfoForm({ user }: UserInfoProps) {
         description="Update your account details and personal information"
       />
 
-      <form action={updateUserInfo} className="p-8 ">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+      <form action={updateUserInfo} className="p-4 sm:p-6 lg:p-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 lg:gap-8">
           <UserFormInput
             id="full_name"
             name="full_name"
@@ -79,7 +79,7 @@ export default function UserInfoForm({ user }: UserInfoProps) {
           />
         </div>
 
-        <div className="mt-8 flex justify-end">
+        <div className="mt-6 sm:mt-8 flex justify-end">
           <SubmitButton />
         </div>
       </form>
