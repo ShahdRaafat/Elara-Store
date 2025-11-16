@@ -42,7 +42,7 @@ function Navigation() {
       </Button>
 
       {/* Desktop Nav */}
-      <ul className="hidden md:flex flex-row gap-4 md:gap-8 xl:gap-12 items-center justify-between">
+      <ul className="hidden md:flex flex-row gap-4 md:gap-4 xl:gap-12 items-center justify-between">
         <li>
           <NavLink href="/" title="Home" />
         </li>

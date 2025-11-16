@@ -4,7 +4,7 @@ export default function Logo() {
   return (
     <Link
       href="/"
-      className="group flex items-baseline gap-1 font-bold text-3xl focus:outline-none rounded-sm"
+      className="group flex items-baseline gap-1 font-bold text-3xl focus:outline-none rounded-sm mr-1"
       aria-label="Elara Store - Return to homepage"
     >
       <span className="bg-[#8c1c13] bg-clip-text text-transparent  group-hover:scale-105 group-focus:scale-105 transition-all duration-300 ease-out text-4xl">
