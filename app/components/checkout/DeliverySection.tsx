@@ -1,7 +1,7 @@
 "use client";
 import { UseFormReturn } from "react-hook-form";
 import { FormInputs } from "./CheckoutForm";
-import InputField from "./CheckoutInput";
+import InputField from "../InputField";
 
 interface DeliverySectionProps {
   form: UseFormReturn<FormInputs>;

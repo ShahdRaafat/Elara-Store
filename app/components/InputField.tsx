@@ -19,7 +19,7 @@ function InputField({
 }: InputFieldProps) {
   return (
     <div className="flex flex-col gap-1 mb-4">
-      {label && <label className="text-sm font-medium">{label}</label>}
+      {label && <label className="text-sm font-bold mb-2">{label}</label>}
       <input
         {...register}
         type={type}
