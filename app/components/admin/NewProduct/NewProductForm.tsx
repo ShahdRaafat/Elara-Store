@@ -1,10 +1,19 @@
 "use client";
-
-import { useForm, useFieldArray } from "react-hook-form";
-import InputField from "../../InputField";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
-import { Upload } from "lucide-react";
+import {
+  FieldArrayWithId,
+  FieldErrors,
+  useFieldArray,
+  UseFieldArrayAppend,
+  UseFieldArrayRemove,
+  useForm,
+  UseFormRegister,
+} from "react-hook-form";
+import InputField from "../../InputField";
+import ImageUpload from "./ImageUpload";
+import ProductDescription from "./ProductDescription";
+import VariantsSection from "./VariantsSection";
 
 interface VariantInput {
   size: string;
@@ -21,8 +30,21 @@ interface ProductFormInputs {
   variants: VariantInput[];
 }
 
+export interface VariantsSectionProps {
+  fields: FieldArrayWithId<ProductFormInputs, "variants", "id">[];
+  register: UseFormRegister<ProductFormInputs>;
+  errors: FieldErrors<ProductFormInputs>;
+  remove: UseFieldArrayRemove;
+  append: UseFieldArrayAppend<ProductFormInputs, "variants">;
+}
+export interface fieldProps {
+  register: ReturnType<UseFormRegister<ProductFormInputs>>;
+  errors: FieldErrors<ProductFormInputs>;
+}
+
 export default function NewProductForm() {
   const categories = ["Clothing", "Bags", "Accessories", "Shoes"];
+
   const form = useForm<ProductFormInputs>({
     defaultValues: {
       hasVariants: false,
@@ -50,7 +72,7 @@ export default function NewProductForm() {
   }
 
   return (
-    <div className="p-6 md:p-8">
+    <div className="bg-white p-6 md:p-8">
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <InputField
@@ -61,6 +83,7 @@ export default function NewProductForm() {
             })}
             error={errors.name}
           />
+
           <InputField
             label="Price"
             placeholder="0.00"
@@ -68,21 +91,12 @@ export default function NewProductForm() {
             error={errors.price}
           />
 
-          <div className="sm:col-span-2 flex flex-col">
-            <label className="text-sm font-bold">Description</label>
-            <textarea
-              {...register("description", {
-                required: "Description is required",
-              })}
-              placeholder="Describe the product..."
-              className="w-full mt-2 px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
-            ></textarea>
-            {errors.description && (
-              <p className="text-sm text-red-500 mt-1">
-                {errors.description.message}
-              </p>
-            )}
-          </div>
+          <ProductDescription
+            register={register("description", {
+              required: "Description is required",
+            })}
+            errors={errors}
+          />
 
           <div>
             <label className="text-sm font-bold">Category</label>
@@ -96,21 +110,10 @@ export default function NewProductForm() {
             </select>
           </div>
 
-          <div>
-            <label className="text-sm font-bold">Product Image</label>
-            <Upload className="mt-2 text-gray-500" />
-            <input
-              type="file"
-              accept="image/*"
-              className="w-full mt-2"
-              {...register("image", { required: "Image is required" })}
-            />
-            {errors.image && (
-              <p className="text-sm text-red-500 mt-1">
-                {errors.image.message}
-              </p>
-            )}
-          </div>
+          <ImageUpload
+            register={register("image", { required: "Image is required" })}
+            errors={errors}
+          />
         </div>
 
         <div className="flex items-center gap-4">
@@ -133,50 +136,13 @@ export default function NewProductForm() {
         )}
 
         {hasVariants && (
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold">Variants</h3>
-              <Button
-                type="button"
-                onClick={() => append({ size: "", stock: 0 })}
-                className="bg-brand-500 text-white"
-              >
-                + Add Variant
-              </Button>
-            </div>
-            {fields.map((field, index) => (
-              <div
-                key={field.id}
-                className="grid grid-cols-1  sm:grid-cols-[1fr_1fr_auto] gap-4 items-center justify-center border p-4 rounded-lg"
-              >
-                <InputField
-                  label="Size"
-                  placeholder="S / M / L / 36 / 38 ..."
-                  register={register(`variants.${index}.size` as const, {
-                    required: "Size is required",
-                  })}
-                  error={errors.variants?.[index]?.size}
-                />
-
-                <InputField
-                  label="Stock"
-                  placeholder="Stock"
-                  register={register(`variants.${index}.stock` as const, {
-                    required: "Stock is required",
-                  })}
-                  error={errors.variants?.[index]?.stock}
-                />
-
-                <Button
-                  type="button"
-                  onClick={() => remove(index)}
-                  className="w-auto -mb-3"
-                >
-                  Remove
-                </Button>
-              </div>
-            ))}
-          </div>
+          <VariantsSection
+            fields={fields}
+            register={register}
+            errors={errors}
+            append={append}
+            remove={remove}
+          />
         )}
 
         <Button
