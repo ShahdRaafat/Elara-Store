@@ -1,5 +1,6 @@
 import { CartItemType } from "../types/cart";
-import { Order, OrderInsert } from "../types/order";
+import { OrderInsert } from "../types/order";
+import { ProductInsert, ProductVariantInsert } from "../types/product";
 import { createPublicClient } from "./supabase/public";
 import { createClient } from "./supabase/server";
 export async function getCurrentUser() {
@@ -151,4 +152,52 @@ export async function insertOrder(orderData: OrderInsert) {
 
   if (error) throw new Error(error.message);
   return order;
+}
+
+//Insert new product in database
+export async function insertProduct(productData: ProductInsert) {
+  const supabase = await createClient();
+
+  const { data: product, error } = await supabase
+    .from("products")
+    .insert([productData])
+    .select("*")
+    .single();
+
+  if (error) throw new Error(error.message);
+  return product;
+}
+export async function insertProductVariants(
+  productVariantsData: ProductVariantInsert[]
+) {
+  const supabase = await createClient();
+
+  const { data: productVariants, error } = await supabase
+    .from("product_variants")
+    .insert(productVariantsData)
+    .select("*");
+
+  if (error) throw new Error(error.message);
+  return productVariants;
+}
+
+export async function uploadProductImage(imageFile: File): Promise<string> {
+  const supabase = await createClient();
+
+  const fileName = imageFile.name;
+
+  const { error: uploadError } = await supabase.storage
+    .from("products")
+    .upload(fileName, imageFile, {
+      cacheControl: "3600",
+      upsert: true,
+    });
+
+  if (uploadError) {
+    throw new Error(`Failed to upload image: ${uploadError.message}`);
+  }
+
+  const { data } = supabase.storage.from("products").getPublicUrl(fileName);
+
+  return data.publicUrl;
 }

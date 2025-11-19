@@ -3,7 +3,15 @@ import { createClient } from "@/app/_lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { OrderData } from "../types/order";
-import { getCurrentUser, insertOrder, insertOrderItems } from "./data-services";
+import {
+  getCurrentUser,
+  insertOrder,
+  insertOrderItems,
+  insertProduct,
+  insertProductVariants,
+  uploadProductImage,
+} from "./data-services";
+import { ProductFormInputs } from "../components/admin/NewProduct/NewProductForm";
 
 export async function signUpAction(
   email: string,
@@ -43,7 +51,7 @@ export async function signUpAction(
 export async function signInAction(email: string, password: string) {
   const supabase = await createClient();
 
-  const { data, error } = await supabase.auth.signInWithPassword({
+  const { error } = await supabase.auth.signInWithPassword({
     email,
     password,
   });
@@ -170,4 +178,47 @@ export async function getUserOrders() {
 
   if (error) throw new Error(error.message);
   return data;
+}
+
+export async function addNewProduct(formData: ProductFormInputs) {
+  try {
+    let totalStock = 0;
+
+    if (formData.hasVariants) {
+      const variants = formData.variants || [];
+      totalStock = variants.reduce((sum, v) => sum + Number(v.stock), 0);
+    } else {
+      totalStock = Number(formData.stock || 0);
+    }
+
+    const image_url = await uploadProductImage(formData.image[0]);
+
+    const ProductData = {
+      name: formData.name as string,
+      price: Number(formData.price),
+      description: formData.description as string,
+      category: formData.category as string,
+      image_url: image_url,
+      stock: totalStock,
+      has_variants: formData.hasVariants === true,
+    };
+
+    const product = await insertProduct(ProductData);
+
+    if (formData.hasVariants === true) {
+      const variants = formData.variants || [];
+      const productVariantsData = variants.map((variant) => {
+        return {
+          product_id: product.id,
+          size: variant.size,
+          stock: Number(variant.stock),
+        };
+      });
+      await insertProductVariants(productVariantsData);
+    }
+    return product;
+  } catch (error) {
+    console.error("Add new product error:", error);
+    throw error;
+  }
 }

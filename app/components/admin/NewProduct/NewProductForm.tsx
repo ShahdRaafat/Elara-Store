@@ -1,4 +1,5 @@
 "use client";
+import { addNewProduct } from "@/app/_lib/actions";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import {
@@ -10,6 +11,7 @@ import {
   useForm,
   UseFormRegister,
 } from "react-hook-form";
+import toast from "react-hot-toast";
 import InputField from "../../InputField";
 import ImageUpload from "./ImageUpload";
 import ProductDescription from "./ProductDescription";
@@ -19,15 +21,15 @@ interface VariantInput {
   size: string;
   stock: number;
 }
-interface ProductFormInputs {
+export interface ProductFormInputs {
   name: string;
   description: string;
   price: number;
-  stock: number;
+  stock?: number;
   category: string;
   image: FileList;
   hasVariants: boolean;
-  variants: VariantInput[];
+  variants?: VariantInput[];
 }
 
 export interface VariantsSectionProps {
@@ -57,6 +59,7 @@ export default function NewProductForm() {
     handleSubmit,
     watch,
     control,
+    reset,
     formState: { errors },
   } = form;
 
@@ -67,13 +70,21 @@ export default function NewProductForm() {
 
   const hasVariants = watch("hasVariants");
 
-  function onSubmit(data: ProductFormInputs) {
-    console.log("Submit data:", data);
+  async function onSubmit(data: ProductFormInputs) {
+    console.log(data);
+    try {
+      const result = await addNewProduct(data);
+      console.log(result);
+      toast.success("Product created successfully!");
+      reset();
+    } catch (error) {
+      toast.error("Failed to create product");
+    }
   }
 
   return (
     <div className="bg-white p-6 md:p-8">
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <InputField
             label="Product Name"

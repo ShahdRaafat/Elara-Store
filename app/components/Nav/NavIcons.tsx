@@ -1,22 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
-import {
-  HeartIcon,
-  LogOutIcon,
-  UserIcon,
-  LayoutDashboardIcon,
-} from "lucide-react";
-import CartIcon from "./CartIcon";
-import Link from "next/link";
 import { createClient } from "@/app/_lib/supabase/client";
+import { Button } from "@/components/ui/button";
 import { User } from "@supabase/supabase-js";
+import { HeartIcon, LogOutIcon, UserIcon } from "lucide-react";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import CartIcon from "./CartIcon";
 
 export default function NavIcons() {
   const [user, setUser] = useState<User | null>(null);
   const [role, setRole] = useState<string>("");
-  console.log(role);
+
   useEffect(() => {
     const supabase = createClient();
 
@@ -46,7 +41,7 @@ export default function NavIcons() {
         .select("role")
         .eq("id", user.id)
         .single();
-      console.log(data);
+
       if (data && !error) {
         setRole(data.role);
       }

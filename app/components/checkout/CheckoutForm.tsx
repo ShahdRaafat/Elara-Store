@@ -30,8 +30,6 @@ export default function CheckoutForm() {
 
   async function onSubmit(data: FormInputs) {
     try {
-      console.log(data.paymentMethod);
-
       if (data.paymentMethod === "card") {
         // Stripe
         const res = await createStripeSession({

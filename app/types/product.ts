@@ -1,5 +1,4 @@
-export interface Product {
-  id: string;
+export interface ProductInsert {
   name: string;
   price: number;
   description: string;
@@ -9,9 +8,18 @@ export interface Product {
   has_variants: boolean;
 }
 
-export interface ProductVariants {
+export interface Product extends ProductInsert {
   id: string;
+  created_at?: string;
+}
+
+export interface ProductVariantInsert {
   product_id: string;
   size: string;
   stock: number;
+}
+
+export interface ProductVariants extends ProductVariantInsert {
+  id: string;
+  created_at?: string;
 }
