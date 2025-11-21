@@ -1,4 +1,5 @@
 import { getProducts } from "@/app/_lib/data-services";
+import ProductCard from "@/app/components/admin/AllProducts/ProductCard";
 import { ProductsTable } from "@/app/components/admin/AllProducts/ProductsTable";
 
 async function page() {
@@ -11,7 +12,11 @@ async function page() {
       <p className="mb-6 text-gray-500">
         Browse all products available in the store.
       </p>
+
+      {/* Desktop table view */}
       <ProductsTable products={products} />
+      {/* Mobile card view */}
+      <ProductCard products={products} />
     </div>
   );
 }
