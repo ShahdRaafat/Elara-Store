@@ -50,7 +50,7 @@ function SidebarNavigation() {
               <li key={link.name}>
                 <Link
                   href={`${link.href}`}
-                  className={`flex gap-4 px-5 py-3 hover:bg-brand-500 hover:text-white transition-colors items-center rounded-md text-gray-700
+                  className={`flex gap-4 px-4 py-2.5 hover:bg-brand-500 hover:text-white transition-colors items-center rounded-lg text-gray-700
                   ${pathname === link.href ? "bg-brand-500 text-white" : ""}
                   `}
                 >

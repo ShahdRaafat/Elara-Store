@@ -1,7 +1,8 @@
 import { Product } from "@/app/types/product";
 import { Button } from "@/components/ui/button";
-import { Edit2, Eye, Trash2 } from "lucide-react";
+import { Edit2, Eye } from "lucide-react";
 import Link from "next/link";
+import DeleteProduct from "./DeleteProduct";
 
 function ProductActions({ product }: { product: Product }) {
   return (
@@ -21,12 +22,8 @@ function ProductActions({ product }: { product: Product }) {
           <Edit2 className="h-4 w-4" />
         </Link>
       </Button>
-      <Button
-        variant="icon"
-        className="flex-1 p-2 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
-      >
-        <Trash2 className="h-4 w-4" />
-      </Button>
+
+      <DeleteProduct productId={product.id} />
     </div>
   );
 }
