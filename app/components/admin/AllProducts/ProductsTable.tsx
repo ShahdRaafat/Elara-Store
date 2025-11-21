@@ -4,6 +4,8 @@ import { Edit2, Trash2, Eye } from "lucide-react";
 
 import { Product } from "@/app/types/product";
 import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export function ProductsTable({ products }: { products: Product[] }) {
   return (
@@ -91,15 +93,27 @@ export function ProductsTable({ products }: { products: Product[] }) {
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center justify-center gap-2">
-                        <button className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors">
+                        <Button
+                          variant="icon"
+                          className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
+                        >
                           <Eye className="h-4 w-4" />
-                        </button>
-                        <button className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors">
-                          <Edit2 className="h-4 w-4" />
-                        </button>
-                        <button className="p-2 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors">
+                        </Button>
+
+                        <Button
+                          variant="icon"
+                          className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
+                        >
+                          <Link href={`/admin/products/edit/${product.id}`}>
+                            <Edit2 className="h-4 w-4" />
+                          </Link>
+                        </Button>
+                        <Button
+                          variant="icon"
+                          className="p-2 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
+                        >
                           <Trash2 className="h-4 w-4" />
-                        </button>
+                        </Button>
                       </div>
                     </td>
                   </tr>

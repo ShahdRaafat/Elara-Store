@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
-import "./globals.css";
-import Header from "./components/Nav/Header";
-import { CartProvider } from "./_contexts/CartContext";
 import { Toaster } from "react-hot-toast";
+import { CartProvider } from "./_contexts/CartContext";
 import { WishlistProvider } from "./_contexts/WishlistContext";
+import Header from "./components/Nav/Header";
+import "./globals.css";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -26,7 +26,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={` text-grey-700 min-h-screen flex flex-col ${montserrat.className} overflow-x-hidden antialiased`}
+        className={` text-grey-700 min-h-screen flex flex-col overflow-x-hidden antialiased`}
       >
         <CartProvider>
           <WishlistProvider>

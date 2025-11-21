@@ -5,13 +5,15 @@ import { redirect } from "next/navigation";
 import { OrderData } from "../types/order";
 import {
   getCurrentUser,
+  getProductVariants,
   insertOrder,
   insertOrderItems,
   insertProduct,
   insertProductVariants,
   uploadProductImage,
 } from "./data-services";
-import { ProductFormInputs } from "../components/admin/NewProduct/NewProductForm";
+import { ProductFormInputs } from "../components/admin/NewProduct/ProductForm";
+import { get } from "http";
 
 export async function signUpAction(
   email: string,
@@ -219,6 +221,89 @@ export async function addNewProduct(formData: ProductFormInputs) {
     return product;
   } catch (error) {
     console.error("Add new product error:", error);
+    throw error;
+  }
+}
+export async function editProduct(
+  productId: string,
+  formData: ProductFormInputs
+) {
+  try {
+    const has_variants = formData.hasVariants === true;
+
+    //update the product itself in products table
+    const supabase = await createClient();
+
+    const updateProductData: {
+      name: string;
+      price: number;
+      description: string;
+      category: string;
+      has_variants: boolean;
+      stock: number | undefined;
+      image_url?: string;
+    } = {
+      name: formData.name as string,
+      price: Number(formData.price),
+      description: formData.description as string,
+      category: formData.category as string,
+      has_variants: formData.hasVariants === true,
+      stock: formData?.stock,
+    };
+
+    //Check if a new image is uploaded
+    if (formData.image?.[0]) {
+      const image_url = await uploadProductImage(formData.image[0]);
+      updateProductData.image_url = image_url;
+    }
+
+    const { error } = await supabase
+      .from("products")
+      .update(updateProductData)
+      .eq("id", productId);
+
+    if (error) throw new Error(error.message);
+
+    //if there is no variants, we can skip the variants update
+    if (!has_variants) return;
+
+    //update product variants if any
+
+    //get old variants
+    const oldVariants = await getProductVariants(productId);
+
+    //get new variants from formData
+    const variants = formData.variants || [];
+    console.log("Variants to insert:", variants);
+
+    //determine update or insert
+
+    for (const variant of variants) {
+      const existingVariant = oldVariants.find((v) => v.size === variant.size);
+      if (existingVariant) {
+        //update existing variant
+
+        const { error: updateError } = await supabase
+          .from("product_variants")
+          .update({ stock: Number(variant.stock) })
+          .eq("id", existingVariant.id);
+        if (updateError) throw new Error(updateError.message);
+      } else {
+        //insert new variant
+        await insertProductVariants([
+          {
+            product_id: productId,
+            size: variant.size,
+            stock: Number(variant.stock),
+          },
+        ]);
+      }
+    }
+    revalidatePath("/products");
+    revalidatePath("/admin/products");
+    revalidatePath(`/admin/products/edit/${productId}`);
+  } catch (error) {
+    console.error("Edit product error:", error);
     throw error;
   }
 }

@@ -1,4 +1,4 @@
-import NewProductForm from "../components/admin/NewProduct/NewProductForm";
+import ProductForm from "../components/admin/NewProduct/ProductForm";
 
 function page() {
   return (
@@ -7,7 +7,7 @@ function page() {
         New Product Page
       </h1>
       <p className="mb-6 text-gray-500">Here you can add a new product.</p>
-      <NewProductForm />
+      <ProductForm mode="add" />
     </div>
   );
 }

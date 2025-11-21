@@ -1,6 +1,12 @@
-import { fieldProps } from "./NewProductForm";
+import Image from "next/image";
+import { fieldProps } from "./ProductForm";
 
-function ImageUpload({ register, errors }: fieldProps) {
+function ImageUpload({
+  register,
+  errors,
+  mode,
+  initialImage,
+}: fieldProps & { initialImage?: string }) {
   return (
     <div>
       <label className="text-sm font-bold">Product Image</label>
@@ -14,6 +20,16 @@ function ImageUpload({ register, errors }: fieldProps) {
       />
       {errors.image && (
         <p className="text-sm text-red-500 mt-1">{errors.image.message}</p>
+      )}
+      {mode === "edit" && initialImage && (
+        <div className="relative w-24 h-24">
+          <Image
+            src={initialImage}
+            alt="Current"
+            fill
+            className="absolute object-contain rounded-lg mt-2"
+          />
+        </div>
       )}
     </div>
   );

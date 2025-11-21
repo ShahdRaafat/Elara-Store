@@ -1,5 +1,5 @@
 "use client";
-import { addNewProduct } from "@/app/_lib/actions";
+import { addNewProduct, editProduct } from "@/app/_lib/actions";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import {
@@ -16,6 +16,7 @@ import InputField from "../../InputField";
 import ImageUpload from "./ImageUpload";
 import ProductDescription from "./ProductDescription";
 import VariantsSection from "./VariantsSection";
+import Image from "next/image";
 
 interface VariantInput {
   size: string;
@@ -42,15 +43,25 @@ export interface VariantsSectionProps {
 export interface fieldProps {
   register: ReturnType<UseFormRegister<ProductFormInputs>>;
   errors: FieldErrors<ProductFormInputs>;
+  mode?: "add" | "edit";
 }
 
-export default function NewProductForm() {
+export default function ProductForm({
+  mode,
+  productId,
+  initialValues,
+}: {
+  mode: "add" | "edit";
+  productId?: string;
+  initialValues?: Partial<ProductFormInputs> & { image_url?: string };
+}) {
   const categories = ["Clothing", "Bags", "Accessories", "Shoes"];
 
   const form = useForm<ProductFormInputs>({
     defaultValues: {
       hasVariants: false,
       variants: [],
+      ...initialValues,
     },
   });
 
@@ -71,14 +82,18 @@ export default function NewProductForm() {
   const hasVariants = watch("hasVariants");
 
   async function onSubmit(data: ProductFormInputs) {
-    console.log(data);
     try {
-      const result = await addNewProduct(data);
-      console.log(result);
-      toast.success("Product created successfully!");
+      if (mode === "add") {
+        await addNewProduct(data);
+        toast.success("Product created successfully!");
+      } else {
+        await editProduct(productId!, data);
+        toast.success("Product updated successfully!");
+      }
+
       reset();
     } catch (error) {
-      toast.error("Failed to create product");
+      toast.error("Failed to create or update product");
     }
   }
 
@@ -122,8 +137,12 @@ export default function NewProductForm() {
           </div>
 
           <ImageUpload
-            register={register("image", { required: "Image is required" })}
+            register={register("image", {
+              required: mode === "add" ? "Image is required" : false,
+            })}
             errors={errors}
+            mode={mode}
+            initialImage={initialValues?.image_url}
           />
         </div>
 
@@ -160,7 +179,7 @@ export default function NewProductForm() {
           type="submit"
           className="bg-brand-500 text-white px-6 py-3 rounded-lg"
         >
-          Create Product
+          {mode === "add" ? "Add Product" : "Update Product"}
         </Button>
       </form>
     </div>

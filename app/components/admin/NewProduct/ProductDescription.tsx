@@ -1,4 +1,4 @@
-import { fieldProps } from "./NewProductForm";
+import { fieldProps } from "./ProductForm";
 
 function ProductDescription({ register, errors }: fieldProps) {
   return (

@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import InputField from "../../InputField";
-import { VariantsSectionProps } from "./NewProductForm";
+import { VariantsSectionProps } from "./ProductForm";
 
 function VariantsSection({
   fields,
