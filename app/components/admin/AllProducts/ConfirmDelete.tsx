@@ -14,7 +14,7 @@ export default function ConfirmDelete({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 backdrop-blur-md bg-opacity-50 flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
       <div className="bg-stone-100 border  rounded-lg p-6 max-w-md w-full mx-4">
         <h2 className="text-xl font-semibold mb-4 text-brand-500">
           Confirm Delete

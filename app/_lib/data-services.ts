@@ -49,6 +49,18 @@ export async function getProducts(sortBy?: string) {
 
   return products;
 }
+export async function getProductsWithVariants() {
+  const supabase = await createClient();
+
+  const { data: products, error } = await supabase.from("products").select(`
+      *,
+      product_variants (*)
+    `);
+
+  if (error) throw new Error(error.message);
+  return products;
+}
+
 export async function getProductsByCategory(category: string) {
   const supabase = createPublicClient();
   const { data: products, error } = await supabase

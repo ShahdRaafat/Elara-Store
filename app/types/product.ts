@@ -11,6 +11,7 @@ export interface ProductInsert {
 export interface Product extends ProductInsert {
   id: string;
   created_at?: string | undefined;
+  product_variants?: ProductVariants[];
 }
 
 export interface ProductVariantInsert {
