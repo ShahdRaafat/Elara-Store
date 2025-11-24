@@ -114,7 +114,7 @@ export async function createCashOrder(formData: OrderData) {
       postal_code: formData.postalCode,
       payment_method: "cash" as const,
       total: formData.total,
-      status: "processing",
+      status: "processing" as const,
       payment_status: "pending" as const,
     };
 

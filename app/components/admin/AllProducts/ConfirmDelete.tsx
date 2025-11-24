@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { TrashIcon } from "lucide-react";
 
 export default function ConfirmDelete({
@@ -26,22 +27,23 @@ export default function ConfirmDelete({
         </p>
 
         <div className="flex gap-3 justify-end">
-          <button
+          <Button
+            variant="outline"
             onClick={onClose}
             className="px-4 py-2 text-brand-500 bg-brand-100 rounded hover:bg-brand-200 transition-colors disabled:opacity-50 cursor-pointer"
           >
             Cancel
-          </button>
+          </Button>
 
-          <button
+          <Button
             onClick={onConfirm}
-            className="px-4 py-2 bg-brand-500 text-white rounded hover:bg-red-700 transition-colors disabled:opacity-50 flex items-center gap-2 cursor-pointer"
+            className="px-4 py-2 text-white rounded hover:bg-red-700 transition-colors disabled:opacity-50 flex items-center gap-2 cursor-pointer"
           >
             <>
               <TrashIcon className="h-4 w-4" />
               Delete
             </>
-          </button>
+          </Button>
         </div>
       </div>
     </div>

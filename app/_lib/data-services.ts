@@ -213,3 +213,14 @@ export async function uploadProductImage(imageFile: File): Promise<string> {
 
   return data.publicUrl;
 }
+export async function getOrders() {
+  const supabase = await createClient();
+  const { data: orders, error } = await supabase
+    .from("orders")
+    .select(
+      "*, order_items(*, products(name, image_url),product_variants(size))"
+    )
+    .order("created_at", { ascending: false });
+  if (error) throw new Error(error.message);
+  return orders;
+}

@@ -60,6 +60,8 @@ export default function ProductViewModal({
             <Badge className="bg-gray-100 text-gray-800">
               Stock: {product.stock}
             </Badge>
+
+            <p>Price: ${product.price.toFixed(2)}</p>
           </div>
 
           {product.has_variants && product.product_variants && (

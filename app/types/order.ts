@@ -20,6 +20,7 @@ export interface OrderItem {
   price: number;
   quantity: number;
   products: { name: string; image_url: string };
+  product_variants?: { size: string | null };
 }
 export interface OrderInsert {
   user_id: string | null;
@@ -33,7 +34,7 @@ export interface OrderInsert {
   postal_code?: string;
   payment_method: "cash" | "card";
   total: number;
-  status: string;
+  status: "processing" | "shipped" | "delivered";
   payment_status: "pending" | "paid";
   stripe_session_id?: string;
 }
