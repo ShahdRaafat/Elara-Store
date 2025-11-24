@@ -6,7 +6,7 @@ import ProductActions from "./ProductActions";
 
 function ProductCard({ products }: { products: Product[] }) {
   return (
-    <div className="lg:hidden space-y-4">
+    <div className="lg:hidden grid grid-cols-1 md:grid-cols-2 gap-4 space-y-4">
       {products.map((product) => (
         <Card
           key={product.id}

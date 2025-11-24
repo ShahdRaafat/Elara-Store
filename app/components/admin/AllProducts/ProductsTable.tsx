@@ -8,7 +8,7 @@ export function ProductsTable({ products }: { products: Product[] }) {
   return (
     <>
       <div className="hidden lg:block">
-        <Card className="border border-gray-200 overflow-hidden shadow-sm">
+        <Card className="border border-gray-200 shadow-sm ">
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>

@@ -30,7 +30,7 @@ const slides = [
 
 function HeroSection() {
   return (
-    <section className="relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] w-screen h-[calc(100vh-90px)]  lg:-my-12 bg-[#F4F2EE] flex items-center">
+    <section className="relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] w-screen h-[calc(100vh-90px)] -my-6 sm:-my-8  lg:-my-12 bg-[#F4F2EE] flex items-center">
       <Swiper
         modules={[Navigation, Pagination, Autoplay]}
         navigation
