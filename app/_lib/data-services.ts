@@ -11,7 +11,7 @@ export async function getCurrentUser() {
       data: { user },
       error,
     } = await supabase.auth.getUser();
-    console.log(user);
+
     if (error) {
       console.error("Error fetching user:", error);
       return null;
@@ -223,4 +223,56 @@ export async function getOrders() {
     .order("created_at", { ascending: false });
   if (error) throw new Error(error.message);
   return orders;
+}
+
+export async function updateProductStock(cartItems: CartItemType[]) {
+  const supabase = await createClient();
+
+  for (const item of cartItems) {
+    const { data: currentProduct } = await supabase
+      .from("products")
+      .select("stock")
+      .eq("id", item.id)
+      .single();
+
+    if (currentProduct) {
+      const { error: productError } = await supabase
+        .from("products")
+        .update({
+          stock: currentProduct.stock - item.quantity,
+        })
+        .eq("id", item.id);
+
+      if (productError) {
+        throw new Error(
+          `Failed to update product stock: ${productError.message}`
+        );
+      }
+    }
+
+    if (item.has_variants) {
+      const { data: currentVariant } = await supabase
+        .from("product_variants")
+        .select("stock")
+        .eq("product_id", item.id)
+        .eq("size", item.size)
+        .single();
+
+      if (currentVariant) {
+        const { error: variantError } = await supabase
+          .from("product_variants")
+          .update({
+            stock: currentVariant.stock - item.quantity,
+          })
+          .eq("product_id", item.id)
+          .eq("size", item.size);
+
+        if (variantError) {
+          throw new Error(
+            `Failed to update variant stock: ${variantError.message}`
+          );
+        }
+      }
+    }
+  }
 }

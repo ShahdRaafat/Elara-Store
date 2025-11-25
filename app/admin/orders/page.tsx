@@ -15,11 +15,10 @@ async function page() {
   };
 
   const orders = await getOrders();
-  console.log(orders);
   return (
     <div>
       <div className="mb-6 md:mb-8">
-        <h1 className="text-3xl md:text-4xl font-bold text-gray-900">
+        <h1 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-gray-900">
           Orders Management
         </h1>
         <p className="mt-2 mb-6 text-sm md:text-base text-gray-600">

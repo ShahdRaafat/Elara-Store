@@ -11,6 +11,7 @@ import {
   insertOrderItems,
   insertProduct,
   insertProductVariants,
+  updateProductStock,
   uploadProductImage,
 } from "./data-services";
 
@@ -116,11 +117,13 @@ export async function createCashOrder(formData: OrderData) {
       status: "processing" as const,
       payment_status: "pending" as const,
     };
-
     const order = await insertOrder(orderData);
 
     // Insert order items
     await insertOrderItems(order.id, formData.cart);
+
+    //update item stock
+    await updateProductStock(formData.cart);
 
     return order;
   } catch (error) {

@@ -8,6 +8,7 @@ import {
   getOrder,
   insertOrder,
   insertOrderItems,
+  updateProductStock,
 } from "./data-services";
 import { stripe } from "./stripe";
 import { createClient } from "./supabase/server";
@@ -94,7 +95,7 @@ export async function createOrderFromStripeSession(
       postal_code: session.metadata.postalCode,
       payment_method: "card" as const,
       total: (session.amount_total ?? 0) / 100,
-      status: "processing",
+      status: "processing" as const,
       payment_status: "paid" as const,
       stripe_session_id: sessionId,
     };
@@ -104,6 +105,10 @@ export async function createOrderFromStripeSession(
 
     // Insert order items
     await insertOrderItems(order.id, cartItems);
+
+    //update item stock
+    await updateProductStock(cartItems);
+
     revalidatePath("/");
     revalidatePath("/ordersuccess");
     return await getOrder(order.id);
