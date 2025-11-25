@@ -1,7 +1,11 @@
+"use client";
+import { updateOrderStatus } from "@/app/_lib/actions";
 import { Order } from "@/app/types/order";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { X } from "lucide-react";
+import { useState, ChangeEvent } from "react";
+import toast from "react-hot-toast";
 
 function OrderViewModal({
   order,
@@ -12,7 +16,27 @@ function OrderViewModal({
   open: boolean;
   onClose: () => void;
 }) {
+  const [orderStatus, setOrderStatus] = useState<
+    "processing" | "shipped" | "delivered"
+  >(order.status || "processing");
+  const [paymentStatus, setPaymentStatus] = useState<"pending" | "paid">(
+    order.payment_status || "pending"
+  );
+
   const orderItems = order.order_items || [];
+
+  async function handleSave() {
+    try {
+      await updateOrderStatus(order.id, {
+        status: orderStatus,
+        payment_status: paymentStatus,
+      });
+      toast.success("Order updated successfully!");
+      onClose();
+    } catch (error) {
+      toast.error("Failed to update order");
+    }
+  }
 
   function handleOverlayClick(e: React.MouseEvent) {
     if (e.target === e.currentTarget) {
@@ -102,7 +126,15 @@ function OrderViewModal({
               <label className="text-sm text-gray-600 font-medium">
                 Order Status
               </label>
-              <select className="mt-2 w-full rounded-lg border border-gray-200 px-4 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-1">
+              <select
+                value={orderStatus}
+                onChange={(e: ChangeEvent<HTMLSelectElement>) =>
+                  setOrderStatus(
+                    e.target.value as "processing" | "shipped" | "delivered"
+                  )
+                }
+                className="mt-2 w-full rounded-lg border border-gray-200 px-4 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-1"
+              >
                 <option value="processing">Processing</option>
                 <option value="shipped">Shipped</option>
                 <option value="delivered">Delivered</option>
@@ -112,7 +144,13 @@ function OrderViewModal({
               <label className="text-sm text-gray-600 font-medium">
                 Payment Status
               </label>
-              <select className="mt-2 w-full rounded-lg border border-gray-200 px-4 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-1">
+              <select
+                value={paymentStatus}
+                onChange={(e: ChangeEvent<HTMLSelectElement>) =>
+                  setPaymentStatus(e.target.value as "pending" | "paid")
+                }
+                className="mt-2 w-full rounded-lg border border-gray-200 px-4 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-1"
+              >
                 <option value="paid">Paid</option>
                 <option value="pending">Pending</option>
               </select>
@@ -121,16 +159,8 @@ function OrderViewModal({
 
           <div className="flex gap-4 pt-4">
             <Button
-              className="flex-1 px-4 py-3 text-white font-medium rounded-lg transition-colors"
-              style={{ backgroundColor: "var(--color-brand-500)" }}
-              onMouseEnter={(e) =>
-                (e.currentTarget.style.backgroundColor =
-                  "var(--color-brand-600)")
-              }
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.backgroundColor =
-                  "var(--color-brand-500)")
-              }
+              onClick={handleSave}
+              className="flex-1 px-4 py-3 text-white font-medium rounded-lg transition-colors hover:bg-brand-600"
             >
               Save Changes
             </Button>

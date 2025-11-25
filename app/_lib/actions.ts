@@ -2,6 +2,7 @@
 import { createClient } from "@/app/_lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { ProductFormInputs } from "../components/admin/NewProduct/ProductForm";
 import { OrderData } from "../types/order";
 import {
   getCurrentUser,
@@ -12,8 +13,6 @@ import {
   insertProductVariants,
   uploadProductImage,
 } from "./data-services";
-import { ProductFormInputs } from "../components/admin/NewProduct/ProductForm";
-import { get } from "http";
 
 export async function signUpAction(
   email: string,
@@ -318,4 +317,26 @@ export async function deleteProduct(productId: string) {
     throw new Error("Failed to delete product: ");
   }
   revalidatePath("/admin/products");
+}
+export async function updateOrderStatus(
+  orderId: string,
+  updates: { status?: string; payment_status?: string }
+) {
+  try {
+    const supabase = await createClient();
+    const { error } = await supabase
+      .from("orders")
+      .update({
+        status: updates.status,
+        payment_status: updates.payment_status,
+      })
+      .eq("id", orderId);
+    if (error) {
+      throw new Error("Failed to update order status: " + error.message);
+    }
+    revalidatePath("/admin/orders");
+  } catch (error) {
+    console.error("Update order status error:", error);
+    throw error;
+  }
 }
