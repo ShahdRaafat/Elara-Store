@@ -1,3 +1,4 @@
+import { count } from "console";
 import { CartItemType } from "../types/cart";
 import { OrderInsert } from "../types/order";
 import { ProductInsert, ProductVariantInsert } from "../types/product";
@@ -24,10 +25,24 @@ export async function getCurrentUser() {
   }
 }
 
-export async function getProducts(sortBy?: string) {
+export async function getProducts({
+  category,
+  sortBy,
+  page = 1,
+  pageSize = 12,
+  withVariants = false,
+}: {
+  category?: string;
+  sortBy?: string;
+  page?: number;
+  pageSize?: number;
+  withVariants?: boolean;
+} = {}) {
   const supabase = createPublicClient();
 
-  // Default sort
+  const from = (page - 1) * pageSize;
+  const to = from + pageSize - 1;
+
   let column = "created_at";
   let ascending = true;
 
@@ -37,43 +52,32 @@ export async function getProducts(sortBy?: string) {
     ascending = dir === "asc";
   }
 
-  const { data: products, error } = await supabase
+  let query = supabase
     .from("products")
-    .select("*")
-    .order(column, { ascending });
+    .select(withVariants ? `*, product_variants (*)` : "*", { count: "exact" });
 
-  if (error) {
-    console.error(error);
-    return [];
+  if (category && category !== "all") {
+    query = query.eq("category", category);
   }
 
-  return products;
-}
-export async function getProductsWithVariants() {
-  const supabase = await createClient();
-
-  const { data: products, error } = await supabase.from("products").select(`
-      *,
-      product_variants (*)
-    `);
-
-  if (error) throw new Error(error.message);
-  return products;
-}
-
-export async function getProductsByCategory(category: string) {
-  const supabase = createPublicClient();
-  const { data: products, error } = await supabase
-    .from("products")
-    .select("*")
-    .eq("category", category);
+  const {
+    data: products,
+    error,
+    count,
+  } = await query.range(from, to).order(column, { ascending });
 
   if (error) {
     console.error(error);
     throw new Error("Products could not be loaded");
   }
-  return products;
+
+  return {
+    products: products || [],
+    totalCount: count || 0,
+    totalPages: Math.ceil((count || 0) / pageSize),
+  };
 }
+
 export async function getProduct(productId: string) {
   const supabase = createPublicClient();
   const { data: product, error } = await supabase
