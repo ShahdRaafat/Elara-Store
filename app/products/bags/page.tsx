@@ -1,11 +1,13 @@
-import ProductsList from "@/app/components/products/ProductsList";
-export default function Home() {
+import ProductsPage from "@/app/components/products/ProductsPage";
+
+function page({
+  searchParams,
+}: {
+  searchParams?: { page?: string; sortBy?: string };
+}) {
   return (
-    <>
-      <h2 className=" text-primary-500  py-4 text-xl md:text-2xl font-semibold text-center">
-        Bags
-      </h2>
-      <ProductsList category="Bags" />
-    </>
+    <ProductsPage searchParams={searchParams} category="Bags" title="Bags" />
   );
 }
+
+export default page;

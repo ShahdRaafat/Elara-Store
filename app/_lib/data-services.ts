@@ -1,4 +1,3 @@
-import { count } from "console";
 import { CartItemType } from "../types/cart";
 import { OrderInsert } from "../types/order";
 import { ProductInsert, ProductVariantInsert } from "../types/product";
@@ -52,9 +51,37 @@ export async function getProducts({
     ascending = dir === "asc";
   }
 
-  let query = supabase
-    .from("products")
-    .select(withVariants ? `*, product_variants (*)` : "*", { count: "exact" });
+  if (!withVariants) {
+    let query = supabase.from("products").select("*", { count: "exact" });
+
+    if (category && category !== "all") {
+      query = query.eq("category", category);
+    }
+
+    const {
+      data: products,
+      error,
+      count,
+    } = await query.range(from, to).order(column, { ascending });
+
+    if (error) {
+      console.error(error);
+      throw new Error("Products could not be loaded");
+    }
+
+    return {
+      products: products || [],
+      totalCount: count || 0,
+      totalPages: Math.ceil((count || 0) / pageSize),
+    };
+  }
+
+  let query = supabase.from("products").select(
+    `*,
+      product_variants (*)
+    `,
+    { count: "exact" }
+  );
 
   if (category && category !== "all") {
     query = query.eq("category", category);
