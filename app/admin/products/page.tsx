@@ -1,4 +1,4 @@
-import { getProducts } from "@/app/_lib/data-services";
+import { getProducts } from "@/app/_lib/actions";
 import ProductCard from "@/app/components/admin/AllProducts/ProductCard";
 import { ProductsTable } from "@/app/components/admin/AllProducts/ProductsTable";
 import Pagination from "@/app/components/Pagination";

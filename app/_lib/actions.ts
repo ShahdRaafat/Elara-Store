@@ -343,3 +343,92 @@ export async function updateOrderStatus(
     throw error;
   }
 }
+
+export async function getProducts({
+  category,
+  sortBy,
+  page = 1,
+  pageSize = 12,
+  withVariants = false,
+  searchQuery,
+  limit = 5,
+}: {
+  category?: string;
+  sortBy?: string;
+  page?: number;
+  pageSize?: number;
+  withVariants?: boolean;
+  searchQuery?: string;
+  limit?: number;
+} = {}) {
+  const supabase = await createClient();
+
+  const from = (page - 1) * pageSize;
+  const to = from + pageSize - 1;
+
+  let column = "created_at";
+  let ascending = true;
+
+  if (sortBy) {
+    const [col, dir] = sortBy.split("-");
+    column = col;
+    ascending = dir === "asc";
+  }
+
+  if (!withVariants) {
+    let query = supabase.from("products").select("*", { count: "exact" });
+
+    if (category && category !== "all") {
+      query = query.eq("category", category);
+    }
+
+    if (searchQuery && searchQuery.trim().length > 0) {
+      query = query.ilike("name", `%${searchQuery}%`);
+    }
+
+    const {
+      data: products,
+      error,
+      count,
+    } = await query.range(from, to).order(column, { ascending });
+
+    if (error) {
+      console.error(error);
+      throw new Error("Products could not be loaded");
+    }
+
+    return {
+      products: products || [],
+      totalCount: count || 0,
+      totalPages: Math.ceil((count || 0) / pageSize),
+    };
+  }
+
+  let query = supabase.from("products").select(
+    `*,
+      product_variants (*)
+    `,
+    { count: "exact" }
+  );
+
+  if (category && category !== "all") {
+    query = query.eq("category", category);
+  }
+
+  const {
+    data: products,
+    error,
+    count,
+  } = await query.range(from, to).order(column, { ascending });
+
+  if (error) {
+    console.error(error);
+    throw new Error("Products could not be loaded");
+  }
+
+  return {
+    products: products || [],
+    totalCount: count || 0,
+    totalPages: Math.ceil((count || 0) / pageSize),
+  };
+}
