@@ -61,7 +61,7 @@ export default function ProductViewModal({
               Stock: {product.stock}
             </Badge>
 
-            <p>Price: ${product.price.toFixed(2)}</p>
+            <p>Price: {product.price.toFixed(2)}</p>
           </div>
 
           {product.has_variants && product.product_variants && (

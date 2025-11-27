@@ -29,7 +29,7 @@ export function ProductsTable({ products }: { products: Product[] }) {
                     Variants
                   </th>
                   <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">
-                    Created
+                    Price
                   </th>
                   <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">
                     Actions
@@ -82,10 +82,8 @@ export function ProductsTable({ products }: { products: Product[] }) {
                         {product.has_variants ? "Yes" : "No"}
                       </Badge>
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-600">
-                      {product.created_at
-                        ? new Date(product.created_at).toLocaleDateString()
-                        : "-"}
+                    <td className="px-6 py-4 text-sm text-gray-900 font-semibold">
+                      {product.price.toFixed(2)}
                     </td>
                     <td className="px-6 py-4">
                       <ProductActions product={product} />

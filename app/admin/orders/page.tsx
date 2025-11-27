@@ -1,8 +1,11 @@
 import { getOrders } from "@/app/_lib/data-services";
 import OrdersCards from "@/app/components/admin/OrdersManagement/OrdersCards";
 import { OrdersTable } from "@/app/components/admin/OrdersManagement/OrdersTable";
+import Pagination from "@/app/components/Pagination";
 
-async function page() {
+async function page({ searchParams }: { searchParams?: { page?: string } }) {
+  const page = searchParams?.page ? parseInt(searchParams.page) : 1;
+
   const statusColors = {
     processing: "bg-amber-100 text-amber-800",
     shipped: "bg-blue-100 text-blue-800",
@@ -14,7 +17,7 @@ async function page() {
     pending: "bg-orange-100 text-orange-800",
   };
 
-  const orders = await getOrders();
+  const { orders, totalPages } = await getOrders({ page });
   return (
     <div>
       <div className="mb-6 md:mb-8">
@@ -34,6 +37,7 @@ async function page() {
           statusColors={statusColors}
           paymentStatusColors={paymentStatusColors}
         />
+        <Pagination currentPage={page} totalPages={totalPages} />
       </div>
     </div>
   );

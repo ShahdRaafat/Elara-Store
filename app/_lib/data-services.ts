@@ -244,16 +244,29 @@ export async function uploadProductImage(imageFile: File): Promise<string> {
 
   return data.publicUrl;
 }
-export async function getOrders() {
+export async function getOrders({ page = 1, pageSize = 8 }) {
   const supabase = await createClient();
-  const { data: orders, error } = await supabase
+
+  const from = (page - 1) * pageSize;
+  const to = from + pageSize - 1;
+
+  const {
+    data: orders,
+    error,
+    count,
+  } = await supabase
     .from("orders")
     .select(
-      "*, order_items(*, products(name, image_url),product_variants(size))"
+      "*, order_items(*, products(name, image_url),product_variants(size))",
+      { count: "exact" }
     )
+    .range(from, to)
     .order("created_at", { ascending: false });
   if (error) throw new Error(error.message);
-  return orders;
+  return {
+    orders,
+    totalPages: Math.ceil((count || 0) / pageSize),
+  };
 }
 
 export async function updateProductStock(cartItems: CartItemType[]) {
