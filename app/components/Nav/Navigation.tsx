@@ -60,12 +60,11 @@ function Navigation() {
             </DropdownMenuTrigger>
             <DropdownMenuContent>
               {categories.map((cat) => (
-                <DropdownMenuItem key={cat.slug} asChild>
-                  <NavLink
-                    href={`/products/${cat.slug}`}
-                    title={`${cat.name}`}
-                  />
-                </DropdownMenuItem>
+                <NavLink href={`/products/${cat.slug}`} key={cat.slug}>
+                  <DropdownMenuItem className="cursor-pointer">
+                    {cat.name}
+                  </DropdownMenuItem>
+                </NavLink>
               ))}
             </DropdownMenuContent>
           </DropdownMenu>

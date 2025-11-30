@@ -4,12 +4,13 @@ import { usePathname } from "next/navigation";
 
 interface NavLinkProps {
   href: string;
-  title: string;
   className?: string;
   onClick?: () => void;
+  children?: React.ReactNode;
+  title?: string;
 }
 
-function NavLink({ href, title, className, onClick }: NavLinkProps) {
+function NavLink({ href, children, className, onClick, title }: NavLinkProps) {
   const pathname = usePathname();
   return (
     <Link
@@ -21,7 +22,8 @@ function NavLink({ href, title, className, onClick }: NavLinkProps) {
     `}
       onClick={onClick}
     >
-      {title}
+      {children ? children : null}
+      {title ? title : null}
     </Link>
   );
 }
