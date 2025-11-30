@@ -1,6 +1,6 @@
 export function ContactInfo() {
   return (
-    <div className="flex flex-col px-8  lg:px-16 py-12 lg:py-16 bg-[#F4F2EE] h-[calc(100vh-90px)]">
+    <div className="flex flex-col px-8  lg:px-16 py-12 lg:py-16 bg-[#F4F2EE] sm:h-[calc(100vh-90px)]">
       <div>
         <div className="mb-10">
           <div className="mb-4">
