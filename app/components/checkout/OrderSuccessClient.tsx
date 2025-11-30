@@ -1,12 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
-
+import { useCart } from "@/app/_contexts/CartContext";
 import { createOrderFromStripeSession } from "@/app/_lib/stripeAction";
 import { Order, OrderItem } from "@/app/types/order";
 import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
 import OrderItemRow from "../account/OrderItemRow";
-import { useCart } from "@/app/_contexts/CartContext";
 
 export default function OrderSuccessClient({
   sessionId,
@@ -17,34 +16,31 @@ export default function OrderSuccessClient({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const { clearCart } = useCart();
+
+  const processedRef = useRef(false);
+
   useEffect(() => {
+    if (processedRef.current) return;
+
     async function processOrder() {
       try {
-        const cartString = localStorage.getItem("cart");
-        if (!cartString) {
-          throw new Error("Cart not found");
-        }
+        processedRef.current = true;
 
-        const cartItems = JSON.parse(cartString);
+        const fullOrder = await createOrderFromStripeSession(sessionId);
 
-        const fullOrder = await createOrderFromStripeSession(
-          sessionId,
-          cartItems
-        );
         setOrder(fullOrder);
-
         clearCart();
-
         setLoading(false);
       } catch (err) {
         console.error("Payment error:", err);
         setError("There was an issue processing your payment");
         setLoading(false);
+        processedRef.current = false;
       }
     }
 
     processOrder();
-  }, [sessionId, clearCart]);
+  }, [sessionId]);
 
   if (loading) {
     return (
@@ -94,10 +90,13 @@ export default function OrderSuccessClient({
       <div className="bg-gray-50 p-6 rounded-lg text-left">
         <h2 className="text-lg font-semibold mb-4">📋 Order Summary</h2>
         <ul className="divide-y divide-gray-200">
-          {order.order_items &&
+          {order.order_items && order.order_items.length > 0 ? (
             order.order_items.map((item: OrderItem) => (
               <OrderItemRow item={item} key={item.id} />
-            ))}
+            ))
+          ) : (
+            <li className="py-4 text-gray-500">No items found</li>
+          )}
         </ul>
 
         <div className="mt-6 flex justify-between font-semibold text-lg">

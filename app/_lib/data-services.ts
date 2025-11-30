@@ -239,3 +239,44 @@ export async function updateProductStock(cartItems: CartItemType[]) {
     }
   }
 }
+
+//pending cart data services
+export async function savePendingCart(
+  sessionId: string,
+  cartItems: CartItemType[]
+) {
+  const supabase = await createClient();
+
+  const { error } = await supabase.from("pending_carts").upsert({
+    session_id: sessionId,
+    cart_data: cartItems,
+  });
+
+  if (error) {
+    console.error("Error saving pending cart:", error);
+    throw new Error("Failed to save cart");
+  }
+}
+
+export async function getPendingCart(sessionId: string) {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("pending_carts")
+    .select("cart_data")
+    .eq("session_id", sessionId)
+    .single();
+
+  if (error) {
+    console.error("Error fetching pending cart:", error);
+    return null;
+  }
+
+  return data?.cart_data as CartItemType[];
+}
+
+export async function deletePendingCart(sessionId: string) {
+  const supabase = await createClient();
+
+  await supabase.from("pending_carts").delete().eq("session_id", sessionId);
+}

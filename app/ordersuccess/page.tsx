@@ -10,15 +10,16 @@ export default async function SuccessPage({
 }: {
   searchParams: { orderId?: string; session_id?: string };
 }) {
+  const resolvedSearchParams = await Promise.resolve(searchParams);
   // If coming from Stripe, need to process on client side to access localStorage
-  if (searchParams.session_id) {
-    return <OrderSuccessClient sessionId={searchParams.session_id} />;
+  if (resolvedSearchParams.session_id) {
+    return <OrderSuccessClient sessionId={resolvedSearchParams.session_id} />;
   }
 
   // If coming with orderId (Cash on Delivery), fetch the order
   let order = null;
-  if (searchParams.orderId) {
-    order = await getOrder(searchParams.orderId);
+  if (resolvedSearchParams.orderId) {
+    order = await getOrder(resolvedSearchParams.orderId);
   }
 
   // No order found

@@ -4,10 +4,13 @@ import { revalidatePath } from "next/cache";
 import { CartItemType } from "../types/cart";
 import { OrderData } from "../types/order";
 import {
+  deletePendingCart,
   getCurrentUser,
   getOrder,
+  getPendingCart,
   insertOrder,
   insertOrderItems,
+  savePendingCart,
   updateProductStock,
 } from "./data-services";
 import { stripe } from "./stripe";
@@ -43,6 +46,7 @@ export async function createStripeSession(formData: OrderData) {
         postalCode: formData.postalCode || "",
       },
     });
+    await savePendingCart(session.id, formData.cart);
 
     return { url: session.url };
   } catch (error) {
@@ -53,7 +57,6 @@ export async function createStripeSession(formData: OrderData) {
 
 export async function createOrderFromStripeSession(
   sessionId: string,
-  cartItems: CartItemType[]
 ) {
   try {
     const session = await stripe.checkout.sessions.retrieve(sessionId);
@@ -77,8 +80,17 @@ export async function createOrderFromStripeSession(
       .single();
 
     if (existingOrder) {
-      return await getOrder(existingOrder.id);
+      await deletePendingCart(sessionId);
+      return existingOrder;
     }
+
+    const cartItems = await getPendingCart(sessionId);
+
+    if (!cartItems || cartItems.length === 0) {
+      throw new Error("Cart data not found - session may have expired");
+    }
+
+    console.log("🛒 Cart items retrieved:", cartItems.length);
 
     const user = await getCurrentUser();
 
@@ -108,6 +120,8 @@ export async function createOrderFromStripeSession(
 
     //update item stock
     await updateProductStock(cartItems);
+
+    await deletePendingCart(sessionId);
 
     revalidatePath("/");
     revalidatePath("/ordersuccess");
