@@ -26,7 +26,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={` text-grey-700 min-h-screen flex flex-col overflow-x-hidden antialiased`}
+        className={` text-grey-700 min-h-screen flex flex-col montserrat overflow-x-hidden antialiased`}
       >
         <CartProvider>
           <WishlistProvider>

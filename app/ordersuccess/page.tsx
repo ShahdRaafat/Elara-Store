@@ -8,7 +8,7 @@ import { OrderItem } from "../types/order";
 export default async function SuccessPage({
   searchParams,
 }: {
-  searchParams: { orderId?: string; session_id?: string };
+  searchParams: Promise<{ orderId?: string; session_id?: string }>;
 }) {
   const resolvedSearchParams = await Promise.resolve(searchParams);
   // If coming from Stripe, need to process on client side to access localStorage

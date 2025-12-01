@@ -7,10 +7,14 @@ import ProductsOperations from "@/app/components/products/ProductsOperations";
 async function Page({
   searchParams,
 }: {
-  searchParams?: { page?: string; sortBy?: string };
+  searchParams?: Promise<{ page?: string; sortBy?: string }>; // غيّر هنا
 }) {
-  const currentPage = searchParams?.page ? parseInt(searchParams.page, 10) : 1;
-  const sortBy = searchParams?.sortBy || "created_at-desc";
+  const resolvedSearchParams = await searchParams;
+
+  const currentPage = resolvedSearchParams?.page
+    ? parseInt(resolvedSearchParams.page, 10)
+    : 1;
+  const sortBy = resolvedSearchParams?.sortBy || "created_at-desc";
 
   const { products, totalPages } = await getProducts({
     withVariants: true,

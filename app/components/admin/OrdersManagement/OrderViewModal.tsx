@@ -33,7 +33,7 @@ function OrderViewModal({
       });
       toast.success("Order updated successfully!");
       onClose();
-    } catch (error) {
+    } catch {
       toast.error("Failed to update order");
     }
   }

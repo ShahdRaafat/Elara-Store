@@ -1,4 +1,5 @@
 import { Product } from "@/app/types/product";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardAction,
@@ -8,10 +9,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import Image from "next/image";
-import AddToCartButton from "./AddToCartButton";
 import Link from "next/link";
-import { HeartIcon } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import AddToCartButton from "./AddToCartButton";
 import WishlistButton from "./WishlistButton";
 // import AddToCartButton from "./AddToCartButton";
 

@@ -2,7 +2,7 @@ import ProductsList from "@/app/components/products/ProductsList";
 import ProductsOperations from "./ProductsOperations";
 
 interface ProductsPageProps {
-  searchParams?: { page?: string; sortBy?: string; search?: string };
+  searchParams?: Promise<{ page?: string; sortBy?: string; search?: string }>;
   category: string;
   title: string;
 }

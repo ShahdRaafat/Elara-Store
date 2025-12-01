@@ -1,9 +1,9 @@
 "use client";
 import { Product, ProductVariants } from "@/app/types/product";
 import { Button } from "@/components/ui/button";
-import { HeartIcon, Minus, Plus } from "lucide-react";
-import AddToCartButton from "./AddToCartButton";
+import { Minus, Plus } from "lucide-react";
 import { useState } from "react";
+import AddToCartButton from "./AddToCartButton";
 import WishlistButton from "./WishlistButton";
 
 interface ProductControlsProps {

@@ -3,8 +3,15 @@ import OrdersCards from "@/app/components/admin/OrdersManagement/OrdersCards";
 import { OrdersTable } from "@/app/components/admin/OrdersManagement/OrdersTable";
 import Pagination from "@/app/components/Pagination";
 
-async function page({ searchParams }: { searchParams?: { page?: string } }) {
-  const page = searchParams?.page ? parseInt(searchParams.page) : 1;
+async function Page({
+  searchParams,
+}: {
+  searchParams?: Promise<{ page?: string; sortBy?: string }>;
+}) {
+  const resolvedSearchParams = await searchParams;
+  const page = resolvedSearchParams?.page
+    ? parseInt(resolvedSearchParams.page)
+    : 1;
 
   const statusColors = {
     processing: "bg-amber-100 text-amber-800",
@@ -43,4 +50,4 @@ async function page({ searchParams }: { searchParams?: { page?: string } }) {
   );
 }
 
-export default page;
+export default Page;

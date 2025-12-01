@@ -16,7 +16,6 @@ import InputField from "../../InputField";
 import ImageUpload from "./ImageUpload";
 import ProductDescription from "./ProductDescription";
 import VariantsSection from "./VariantsSection";
-import Image from "next/image";
 
 interface VariantInput {
   size: string;

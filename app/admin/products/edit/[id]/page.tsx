@@ -1,8 +1,7 @@
 import { getProduct, getProductVariants } from "@/app/_lib/data-services";
 import ProductForm from "@/app/components/admin/NewProduct/ProductForm";
-import { get } from "http";
 
-async function page({ params }: { params: { id: string } }) {
+async function page({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
 
   const product = await getProduct(id);
