@@ -1,6 +1,6 @@
 import ProductsPage from "@/app/components/products/ProductsPage";
 
-function page({
+function Page({
   searchParams,
 }: {
   searchParams?: { page?: string; sortBy?: string };
@@ -10,4 +10,4 @@ function page({
   );
 }
 
-export default page;
+export default Page;

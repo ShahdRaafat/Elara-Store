@@ -4,7 +4,7 @@ import { ProductsTable } from "@/app/components/admin/AllProducts/ProductsTable"
 import Pagination from "@/app/components/Pagination";
 import ProductsOperations from "@/app/components/products/ProductsOperations";
 
-async function page({
+async function Page({
   searchParams,
 }: {
   searchParams?: { page?: string; sortBy?: string };
@@ -41,4 +41,4 @@ async function page({
   );
 }
 
-export default page;
+export default Page;
