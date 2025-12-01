@@ -15,7 +15,7 @@ const slides = [
     description:
       "Discover the latest fashion trends with our brand-new winter collection. Style meets comfort.",
     buttonText: "Shop Now",
-    image: "/hero-1.png",
+    image: "/hero-1.webp",
   },
   {
     id: 2,
@@ -24,7 +24,7 @@ const slides = [
     description:
       "Experience luxury and elegance with our carefully curated selection. Quality meets affordability.",
     buttonText: "Explore More",
-    image: "/hero-2.png",
+    image: "/hero-2.webp",
   },
 ];
 
